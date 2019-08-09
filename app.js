@@ -56,6 +56,7 @@ io.on('connection', function (socket) {
 io.on('error', function (err) {
     console.log("SocketIO error! Error was", err)
 });
+let deltaT = 0; 
 setInterval(function () {
     const now = Date.now();
     currSockets = currSockets.filter(a => now - a.last < 100);
@@ -66,6 +67,8 @@ setInterval(function () {
     if (!file) {
         file = {
             total: newJumps,
+            thisSecond:newJumps,
+            perSecondData:[],
             lastNum:newJumps,
             startMs: now,
             startDate: new Date(now).toLocaleString(),
@@ -75,6 +78,13 @@ setInterval(function () {
         }
     } else {
         const lastUpd = Date.now();
+        if(!file.thisSecond){
+            file.thisSecond = newJumps;
+        }
+        if(!file.perSecondData){
+            file.perSecondData = [];
+        }
+        file.thisSecond+=newJumps;
         file.total = parseFloat(file.total) + newJumps;
         file.lastMs= lastUpd;
         file.lastNum=newJumps,
@@ -82,6 +92,14 @@ setInterval(function () {
         if(currSockets.length>file.maxComps){
             file.maxComps = currSockets.length;
         }
+    }
+    deltaT+=1;
+    if(deltaT%5===0){
+        file.perSecondData.push({n:file.thisSecond,t:now});
+        file.thisSecond = 0;
+    }
+    if(file.perSecondData.length>30){
+        file.perSecondData = file.perSecondData.slice(file.perSecondData.length-30);
     }
     fs.writeFileSync('bounceRecord.json',JSON.stringify(file),'utf-8');
     process.stdout.write(`Users: ${currSockets.length}, Boings: ${Math.round(file.total)} ` + "\033[0G");
