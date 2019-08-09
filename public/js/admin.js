@@ -51,7 +51,7 @@ const doData = (d) => {
         options: {
             title: {
                 display: true,
-                text: 'Jumps per second'
+                text: 'Jumps per 15 Sec'
             },
             scales: {
                 yAxes: [{
