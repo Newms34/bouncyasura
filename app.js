@@ -57,9 +57,9 @@ io.on('error', function (err) {
 setInterval(function () {
     const now = Date.now();
     currSockets = currSockets.filter(a => now - a.last < 200);
-    console.log('Num users online:',currSockets.length)
+    // console.log('Num users online:',currSockets.length)
     newJumps = currSockets.length * jps / 5;
-    console.log('total boings',Math.floor(totalJumps));
+    // console.log('total boings',Math.floor(totalJumps));
     let file = fs.existsSync('bounceRecord.json') && JSON.parse(fs.readFileSync('bounceRecord.json', 'utf-8'));
     if (!file) {
         file = {

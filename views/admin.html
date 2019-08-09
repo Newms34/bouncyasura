@@ -20,6 +20,7 @@
             bottom: 0;
             min-width: 100%;
             min-height: 100%;
+            filter:sepia(1)
         }
 
         .content {
@@ -31,7 +32,7 @@
             padding: 20px;
         }
 
-        #myBtn {
+        #back-btn {
             width: 200px;
             font-size: 18px;
             padding: 10px;
@@ -41,7 +42,7 @@
             cursor: pointer;
         }
 
-        #myBtn:hover {
+        #back-btn:hover {
             background: #ddd;
             color: black;
         }
@@ -58,7 +59,7 @@
     <div class="content">
         <h1>Taimi</h1>
         <p>Taimi has jumped <span id="jumpTotal"></span> on a maximum of <span id="compTotal"></span>!</p>
-        <button id="back">Go back</button>
+        <button id="back-btn">Go back</button>
     </div>
     <script src="./js/admin.js"></script>
 

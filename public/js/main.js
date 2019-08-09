@@ -5,6 +5,6 @@ setInterval(()=>{
     socket.emit('hb',{name:name})
 },50)
 
-document.getElementById('myBtn').addEventListener('onclick',(e)=>{
-    window.location.href='https://tinyarmy.org'
+document.getElementById('myBtn').addEventListener('click',(e)=>{
+    window.location.assign('https://tinyarmy.org');
 })

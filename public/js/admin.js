@@ -7,3 +7,7 @@ fetch('/stats',{cache:'no-store'}).then(q=>{
         jumps.innerText = r.total==1?'1 time':r.total+' times';
         comps.innerText = r.maxComps==1?'1 computer':r.maxComps+' computers'
 })
+
+document.getElementById('back-btn').addEventListener('click',(e)=>{
+    window.location.assign('../');
+})
