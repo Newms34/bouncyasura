@@ -93,10 +93,11 @@ setInterval(function () {
             file.maxComps = currSockets.length;
         }
     }
-    deltaT+=1;
-    if(deltaT%5===0){
+    deltaT+=1;//note: delta T is TENTHS of a second, NOT seconds
+    if(deltaT%150===0){
         file.perSecondData.push({n:file.thisSecond,t:now});
         file.thisSecond = 0;
+        deltaT = 0;
     }
     if(file.perSecondData.length>30){
         file.perSecondData = file.perSecondData.slice(file.perSecondData.length-30);
