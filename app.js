@@ -25,8 +25,10 @@ const http = require('http').Server(app);
 const io = require('socket.io')(http);
 let currSockets = [],
     totalJumps = 0,
-    jps = 1.36518771;
-/* MEASUREMENTS:
+    jps = 0.9;
+/* MEASUREMENTS: New Video
+27 Frames @ 30FPS = 0.9 j/s
+Old Video
 8.79 seconds with 12 jumps = 1.36518771 j/s */
 io.on('connection', function (socket) {
     // socket.on('noteSrv',function(noteObj){
@@ -56,9 +58,9 @@ io.on('error', function (err) {
 });
 setInterval(function () {
     const now = Date.now();
-    currSockets = currSockets.filter(a => now - a.last < 200);
+    currSockets = currSockets.filter(a => now - a.last < 100);
     // console.log('Num users online:',currSockets.length)
-    newJumps = currSockets.length * jps / 5;
+    newJumps = currSockets.length * jps / 10;
     // console.log('total boings',Math.floor(totalJumps));
     let file = fs.existsSync('bounceRecord.json') && JSON.parse(fs.readFileSync('bounceRecord.json', 'utf-8'));
     if (!file) {
@@ -82,7 +84,8 @@ setInterval(function () {
         }
     }
     fs.writeFileSync('bounceRecord.json',JSON.stringify(file),'utf-8');
-}, 200)
+    process.stdout.write(`Users: ${currSockets.length}, Boings: ${Math.round(file.total)} ` + "\033[0G");
+}, 100)
 //set port, or process.env if not local
 
 http.listen(process.env.PORT || 8080);
