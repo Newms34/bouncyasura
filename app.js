@@ -36,12 +36,13 @@ io.on('connection', function (socket) {
     //     io.emit('noteCli',noteObj)
     // })
     // console.log('user connected')
-    socket.on('hello', function (t) {
+    socket.on('iCanHasJumps', function (t, fn) {
         console.log('New user', t.name)
         currSockets.push({
             name: t.name,
             last: Date.now()
         });
+        fn('yes');
         // console.log('currSockets sez',currSockets)
         // console.log('socket was:',socket)
     });
@@ -50,6 +51,16 @@ io.on('connection', function (socket) {
             return false;
         }
         currSockets.find(q => q.name == d.name).last = Date.now();
+    })
+
+    socket.on('jump', function (d) {
+        //console.log(`Incoming Jump from: ${d.name}, Current Jumpers: ${currSockets.length}`);
+        if (!currSockets.find(q => q.name == d.name)) {
+            return false;
+        }
+        //console.log(`Found Jumper: ${d.name}`);
+        currSockets.find(q => q.name == d.name).last = Date.now();
+        totalJumps++;
     })
 
     socket.on('disconnect', function() {
