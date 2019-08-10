@@ -51,6 +51,13 @@ io.on('connection', function (socket) {
         }
         currSockets.find(q => q.name == d.name).last = Date.now();
     })
+
+    socket.on('disconnect', function() {
+        //console.log('Got disconnect!');
+  
+        let i = currSockets.indexOf(socket);
+        currSockets.splice(i, 1);
+     });
 });
 
 io.on('error', function (err) {
