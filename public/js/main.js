@@ -1,14 +1,39 @@
-const socket = io(),
-    name = Math.floor(Math.random() * 99999999999999999).toString(32);
-socket.emit('iCanHasJumps', {
-    name: name
-}, (data) => {
-    if (data == 'yes') {
-        startJumping();
-    } else {
-        alert("By the Eternal Alchemy! What have you broke now Taimi?");
-    }
+// not sure how we can get this to play, as autoplay is no longer enabled in chrome
+const sound = new Howl({
+    src: ['./SillyChickenV2.mp3'],
+    loop: true,
+    volume: 0.5,
+    autoplay: true,
 });
+
+const socket = io();
+
+socket.on('connect', () => {
+    socket.emit('iCanHasJumps', {
+        name: socket.id
+    }, (data) => {
+        if (data == 'yes') {
+            startJumping();
+        } else {
+            alert("By the Eternal Alchemy! What have you broke now Taimi?");
+        }
+    });
+})
+
+socket.on('disconnect', (reason) => {
+    if (reason === 'io server disconnect') {
+        alert('Server disconnected! Reconnecting.');
+        // the disconnection was initiated by the server, you need to reconnect manually
+        socket.connect();
+    } else {
+        if (confirm('Server disconnected!\n\nDo you want to try reconnecting?')) {
+            socket.connect();
+        }
+    }
+})
+
+
+
 // setInterval(()=>{
 //     socket.emit('hb',{name:name})
 // },50)
@@ -26,7 +51,7 @@ startJumping = () => {
         console.log(`Jumps: ${localJumps}`);
         localJumps++;
         socket.emit('jump', {
-            name: name
+            name: socket.id
         })
     }
 }

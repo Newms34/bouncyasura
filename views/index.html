@@ -3,6 +3,10 @@
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://d1h9a8s8eodvjz.cloudfront.net/fonts/menomonia/08-02-12/menomonia.css" rel="stylesheet"
+        type="text/css">
+    <link href="https://d1h9a8s8eodvjz.cloudfront.net/fonts/menomonia/08-02-12/menomonia-italic.css" rel="stylesheet"
+        type="text/css">
     <style>
         * {
             box-sizing: border-box;
@@ -10,16 +14,24 @@
 
         body {
             margin: 0;
-            font-family: Arial;
             font-size: 17px;
+            overflow: hidden;
+            font-family: Menomonia;
+            color: white
         }
 
-        #myVideo {
-            position: fixed;
-            right: 0;
-            bottom: 0;
+        #JumpinTaimi {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            -webkit-transform: translateX(-50%) translateY(-50%);
+            transform: translateX(-50%) translateY(-50%);
             min-width: 100%;
             min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: -1000;
+            overflow: hidden;
         }
 
         .content {
@@ -45,10 +57,64 @@
             background: #ddd;
             color: black;
         }
+
+        #taimiDialog {
+            position: absolute;
+            top: 0px;
+            left: calc(50% - 512px);
+            height: 512px;
+            width: 1024px;
+            z-index: 99;
+            background-image: url(TaimiDialog.png);
+        }
+
+        #dialogName {
+            position: relative;
+            width: 130px;
+            /* height: 19px; */
+            /* background-color: antiquewhite; */
+            left: 678px;
+            top: 105px;
+            font-size: 12pt;
+        }
+
+        #dialogText {
+            position: relative;
+            width: 470px;
+            height: 75px;
+            /* background-color: aliceblue; */
+            left: 185px;
+            top: 110px;
+            font-size: 12pt;
+        }
+
+        #dialogReply {
+            position: relative;
+            width: 500px;
+            height: 200px;
+            /* background-color: aliceblue; */
+            left: 220px;
+            top: 120px;
+            font-size: 12pt;
+            font-style: italic;
+        }
+
+        .replymessage {
+            height: 44px;
+            display: flex;
+            align-items: center;
+        }
+
+        .replymessage:hover {
+            background: url(activeBG.png);
+            background-repeat: no-repeat;
+            background-size: 490px 50px;
+            background-position-y: center;
+        }
     </style>
 </head>
 
-<body cz-shortcut-listen="true">
+<body>
 
     <video preload muted loop id="JumpinTaimi">
         <source src="./JumpinTaimiV2.mp4" type="video/mp4">
@@ -60,18 +126,18 @@
         <p>Taimi does her part to jump for science</p>
         <button id="myBtn">Join TINY</button>
     </div>
+
+    <div id="taimiDialog" hidden>
+        <div id="dialogText">Test Message</div>
+        <div id="dialogName">Taimi</div>
+        <div id="dialogReply">I dont know about that Taimi</div>
+    </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
-    <script src="./js/main.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.1.2/howler.core.min.js"></script>
-    <script>
-        // not sure how we can get this to play, as autoplay is no longer enabled in chrome
-        const sound = new Howl({
-            src: ['./SillyChickenV2.mp3'],
-            loop: true,
-            volume: 0.5,
-            autoplay: true,
-        });
-    </script>
+    <script src="./js/main.js"></script>
+    
 
+</body>
 
-</body></html>
+</html>
