@@ -36,12 +36,13 @@ io.on('connection', function (socket) {
     //     io.emit('noteCli',noteObj)
     // })
     // console.log('user connected')
-    socket.on('hello', function (t) {
+    socket.on('iCanHasJumps', function (t, fn) {
         console.log('New user', t.name)
         currSockets.push({
             name: t.name,
             last: Date.now()
         });
+        fn('yes');
         // console.log('currSockets sez',currSockets)
         // console.log('socket was:',socket)
     });
@@ -51,15 +52,32 @@ io.on('connection', function (socket) {
         }
         currSockets.find(q => q.name == d.name).last = Date.now();
     })
+
+    socket.on('jump', function (d) {
+        //console.log(`Incoming Jump from: ${d.name}, Current Jumpers: ${currSockets.length}`);
+        if (!currSockets.find(q => q.name == d.name)) {
+            return false;
+        }
+        //console.log(`Found Jumper: ${d.name}`);
+        currSockets.find(q => q.name == d.name).last = Date.now();
+        totalJumps++;
+    })
+
+    socket.on('disconnect', function() {
+        //console.log('Got disconnect!');
+  
+        let i = currSockets.indexOf(socket);
+        currSockets.splice(i, 1);
+     });
 });
 
 io.on('error', function (err) {
     console.log("SocketIO error! Error was", err)
 });
-let deltaT = 0; 
+let deltaT = 0;
 setInterval(function () {
     const now = Date.now();
-    currSockets = currSockets.filter(a => now - a.last < 100);
+    //currSockets = currSockets.filter(a => now - a.last < 100);
     // console.log('Num users online:',currSockets.length)
     newJumps = currSockets.length * jps / 10;
     // console.log('total boings',Math.floor(totalJumps));
@@ -67,43 +85,46 @@ setInterval(function () {
     if (!file) {
         file = {
             total: newJumps,
-            thisSecond:newJumps,
-            perSecondData:[],
-            lastNum:newJumps,
+            thisSecond: newJumps,
+            perSecondData: [],
+            lastNum: newJumps,
             startMs: now,
             startDate: new Date(now).toLocaleString(),
             lastMs: now,
-            maxComps:currSockets.length,
+            maxComps: currSockets.length,
             lastDate: new Date(now).toLocaleString(),
         }
     } else {
         const lastUpd = Date.now();
-        if(!file.thisSecond){
+        if (!file.thisSecond) {
             file.thisSecond = newJumps;
         }
-        if(!file.perSecondData){
+        if (!file.perSecondData) {
             file.perSecondData = [];
         }
-        file.thisSecond+=newJumps;
+        file.thisSecond += newJumps;
         file.total = parseFloat(file.total) + newJumps;
-        file.lastMs= lastUpd;
-        file.lastNum=newJumps,
-        file.lastDate= new Date(lastUpd).toLocaleString();
-        if(currSockets.length>file.maxComps){
+        file.lastMs = lastUpd;
+        file.lastNum = newJumps,
+            file.lastDate = new Date(lastUpd).toLocaleString();
+        if (currSockets.length > file.maxComps) {
             file.maxComps = currSockets.length;
         }
     }
-    deltaT+=1;//note: delta T is TENTHS of a second, NOT seconds
-    if(deltaT%150===0){
-        file.perSecondData.push({n:file.thisSecond,t:now});
+    deltaT += 1; //note: delta T is TENTHS of a second, NOT seconds
+    if (deltaT % 150 === 0) {
+        file.perSecondData.push({
+            n: file.thisSecond,
+            t: now
+        });
         file.thisSecond = 0;
         deltaT = 0;
     }
-    if(file.perSecondData.length>30){
-        file.perSecondData = file.perSecondData.slice(file.perSecondData.length-30);
+    if (file.perSecondData.length > 30) {
+        file.perSecondData = file.perSecondData.slice(file.perSecondData.length - 30);
     }
-    fs.writeFileSync('bounceRecord.json',JSON.stringify(file),'utf-8');
-    process.stdout.write(`Users: ${currSockets.length}, Boings: ${Math.round(file.total)} ` + "\033[0G");
+    fs.writeFileSync('bounceRecord.json', JSON.stringify(file), 'utf-8');
+    process.stdout.write(`Users: ${currSockets.length}, Boings: ${totalJumps} ` + "\033[0G");
 }, 100)
 //set port, or process.env if not local
 
