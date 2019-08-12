@@ -62,7 +62,7 @@ const doData = (d) => {
             }
         }
     }
-    console.log(chartConfig)
+    // console.log(chartConfig)
     historyChart = new Chart(ctx, chartConfig);
 }
 const redoData = d => {
