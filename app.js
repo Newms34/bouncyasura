@@ -46,21 +46,17 @@ io.on('connection', function (socket) {
         // console.log('currSockets sez',currSockets)
         // console.log('socket was:',socket)
     });
-    socket.on('hb', function (d) {
-        if (!currSockets.find(q => q.name == d.name)) {
-            return false;
-        }
-        currSockets.find(q => q.name == d.name).last = Date.now();
-    })
 
-    socket.on('jump', function (d) {
-        //console.log(`Incoming Jump from: ${d.name}, Current Jumpers: ${currSockets.length}`);
+    socket.on('jump', function (d, fn) {
         if (!currSockets.find(q => q.name == d.name)) {
             return false;
         }
-        //console.log(`Found Jumper: ${d.name}`);
         currSockets.find(q => q.name == d.name).last = Date.now();
         totalJumps++;
+        fn({
+            globalJumps: totalJumps,
+            jumpers: currSockets.length
+        });
     })
 
     socket.on('disconnect', function() {

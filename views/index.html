@@ -133,6 +133,46 @@
             background-position: center;
             background-repeat: no-repeat
         }
+
+        #stats {
+            background: url(img/statsBG.png);
+            background-position: top;
+            background-repeat: no-repeat;
+            bottom: 40px;
+            height: 255px;
+            left: 0;
+            overflow: hidden;
+            padding: 20px 0 0 20px;
+            position: absolute;
+            width: 512px;
+            z-index: 99
+        }
+
+        .characterName {
+            font-size: 2em;
+            margin-bottom: 5px
+        }
+
+        .joinTINY a {
+            background: url(img/button.png);
+            background-color: #92500c50;
+            background-blend-mode: multiply;
+            background-position-y: -90px;
+            background-repeat: no-repeat;
+            color: #FAEBD7;
+            cursor: url(img/mouse.png), auto;
+            display: block;
+            font-size: 20pt;
+            height: 45px;
+            margin-top: 10px;
+            padding: 5px 0 0 35px;
+            text-decoration: none;
+            width: 185px
+        }
+
+        .joinTINY a:hover {
+            background-blend-mode: initial;
+        }
     </style>
 </head>
 
@@ -143,11 +183,11 @@
         Your browser does not support HTML5 video.
     </video>
 
-    <div class="content">
+    <!-- <div class="content">
         <h1>Taimi</h1>
         <p>Taimi does her part to jump for science</p>
         <a href="https://tinyarmy.org" class="joinBtn" target="_blank">Join TINY</a>
-    </div>
+    </div> -->
 
     <div id="taimiDialog" hidden>
         <div id="dialogText">Test Message</div>
@@ -158,6 +198,16 @@
 
     <div id="talkBtn">
         Talk [F]
+    </div>
+
+    <div id="stats">
+        <div class="characterName">Tiny Taimi</div>
+        <div class="localJumps">Local Jumps: <span class="localJumpsText">0</span></div>
+        <div class="globalJumps">Global Jumps: <span class="globalJumpsText">0</span></div>
+        <div class="currentJumpers">Total Jumpers: <span class="totalJumpersText">0</span></div>
+        <div class="joinTINY">
+            <a href="https://tinyarmy.org" target="_blank">Join TINY</a>
+        </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>

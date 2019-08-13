@@ -16,7 +16,8 @@ const q = document.querySelector.bind(document),
     });
 
 let currDiagCont = 0,
-    message = null;
+    message = null,
+    localJumps = 0;
 
 socket.on('connect', () => {
     socket.emit('iCanHasJumps', {
@@ -42,20 +43,11 @@ socket.on('disconnect', (reason) => {
     }
 })
 
-document.getElementById('myBtn').addEventListener('click', (e) => {
-    window.location.assign('https://tinyarmy.org');
-})
-
 //Count real jumps!!!
 const startJumping = () => {
-    let localJumps = 0;
     jumpinTaimi.play();
     jumpinTaimi.onplaying = () => {
-        // console.log(`Jumps: ${localJumps}`);
-        localJumps++;
-        socket.emit('jump', {
-            name: socket.id
-        })
+        doJump();
     }
 }
 
@@ -110,6 +102,20 @@ const showDialog = (message) => {
     }).join('');
     q('#dialogReply').innerHTML = replies;
     dialog.hidden = false;
+}
+
+const doJump = () => {
+    //count it locally
+    localJumps++;
+    q('.localJumpsText').innerText = localJumps;
+
+    //send it to the server
+    socket.emit('jump', {
+        name: socket.id
+    }, (data) => {
+        q('.globalJumpsText').innerText = data.globalJumps;
+        q('.totalJumpersText').innerText = data.jumpers;
+    })
 }
 
 //Setup keyboard shortcuts
