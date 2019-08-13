@@ -17,6 +17,21 @@ const chunkArray = (myArray, chunk_size) => {
     return tempArray;
 }
 
+const randChunkArray = (arr, min, max) => {
+    // uncomment this line if you don't want the original array to be affected
+    // var arr = arr.slice();
+    arr=arr.filter(q=>q && q.length && q.trim().length)
+    let arrs = [],
+        size = 1;
+    min = min || 1;
+    max = max || min || 1;
+    while (arr.length > 0) {
+        size = Math.min(max, Math.floor((Math.random() * max) + min));
+        arrs.push(arr.splice(0, size));
+    }
+    return arrs;
+}
+
 class Markov {
     constructor(string, opts) {
         let str = string;
@@ -31,7 +46,7 @@ class Markov {
     }
     makeObj() {
         console.log('group size', this.grpSize)
-        console.log('raw inp length',this.rawInput && this.rawInput.length, typeof this.rawInput)
+        console.log('raw inp length', this.rawInput && this.rawInput.length, typeof this.rawInput)
         this.wrds = chunkArray(this.rawInput.split(/(\s|\n|\r)/).filter(q => q && q.length && q.trim().length), this.grpSize); //basal array, before grouping;
         const uniq = [...new Set(this.wrds)];
         let i = 0;
@@ -109,7 +124,14 @@ router.get('/getMarkov', (req, res, next) => {
         },
         sents = req.query.sents && !isNaN(req.query.sents) ? req.query.sents : 3,
         mark = new Markov(taimi.join(' '), opts)
-    res.send(mark.genMarkOut(sents))
+    const out = {
+        string: mark.genMarkOut(sents),
+        hasContinue: (sents > 1 && (Math.random() > .4 || req.query.split=='true'))||sents>3
+    }
+    if (out.hasContinue) {
+        out.chunks= randChunkArray(out.string.split(/(?<=\.(?!\.)|!|\?|;)/),1,2)
+    }
+    res.send(out)
 })
 
 // res.sendFile(path.join(__dirname, '../public', 'index1.html'));
