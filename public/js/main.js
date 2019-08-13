@@ -1,19 +1,27 @@
 import {
     tinyMsg
-} from './tinyBlurbs.js'
-const q = document.querySelector.bind(document);
-const dialog = q('#taimiDialog'),
-    talk = q('#talkBtn');
-// console.log(tinyMsg)
-// not sure how we can get this to play, as autoplay is no longer enabled in chrome
-const sound = new Howl({
-    src: ['./SillyChickenV2.mp3'],
-    loop: true,
-    volume: 0.5,
-    autoplay: true,
-});
+} from './tinyBlurbs.js';
+const q = document.querySelector.bind(document),
+    dialog = q('#taimiDialog'),
+    talk = q('#talkBtn'),
+    jumpinTaimi = q('#JumpinTaimi'),
+    dialogClose = q('#dialogClose'),
+    socket = io(),
+    dialogOpts = {
+        closes: ['I really don\'t have the time right now Taimi.', 'That\'s great, Taimi! Talk to you soon!', 'Got it, Taimi. Over and out.'],
+        continues: ['Uh huh...', 'Go on...', 'And?', 'So...', 'You\'re saying...']
+    },
+    sound = new Howl({
+        src: ['./SillyChickenV2.mp3'],
+        loop: true,
+        volume: 0.5,
+        autoplay: true,
+    });
 
-const socket = io();
+
+let currDiagCont = 0,
+    message = null,
+    localJumps = 0;
 
 socket.on('connect', () => {
     socket.emit('iCanHasJumps', {
@@ -39,27 +47,12 @@ socket.on('disconnect', (reason) => {
     }
 })
 
-
-
-// setInterval(()=>{
-//     socket.emit('hb',{name:name})
-// },50)
-
-document.getElementById('myBtn').addEventListener('click', (e) => {
-    window.location.assign('https://tinyarmy.org');
-})
-
 //Count real jumps!!!
 const startJumping = () => {
-    const jumpinTaimi = document.getElementById('JumpinTaimi');
-    let localJumps = 0;
+
     jumpinTaimi.play();
     jumpinTaimi.onplaying = () => {
-        // console.log(`Jumps: ${localJumps}`);
-        localJumps++;
-        socket.emit('jump', {
-            name: socket.id
-        })
+        doJump();
     }
 }
 let currDiagCont = 0,
@@ -100,7 +93,6 @@ const taimiSpeak = () => {
     })
 }
 
-
 const closeDialog = () => {
     talk.hidden = false;
     dialog.hidden = true;
@@ -126,6 +118,7 @@ const continueDialog = () => {
     showDialog(message);
 }
 
+
 q('#dialogName').addEventListener('click', closeDialog);
 talk.addEventListener('click', taimiSpeak)
 
@@ -150,6 +143,7 @@ const showDialog = () => {
                 msg = "Thanks, but I'm not interested.";
             }
         }
+
         return `<div class="replymessage" onclick="${r.type}Dialog()">
             <img width="44" src="img/${r.icon}.png"/>${msg}
         </div>`
@@ -158,4 +152,28 @@ const showDialog = () => {
     dialog.hidden = false;
 }
 
-// window.setTimeout(taimiSpeak, 500);
+const doJump = () => {
+    //count it locally
+    localJumps++;
+    q('.localJumpsText').innerText = localJumps;
+
+    //send it to the server
+    socket.emit('jump', {
+        name: socket.id
+    }, (data) => {
+        q('.globalJumpsText').innerText = data.globalJumps;
+        q('.totalJumpersText').innerText = data.jumpers;
+    })
+}
+
+//Setup keyboard shortcuts
+Mousetrap.bind('f', function () {
+    taimiSpeak();
+});
+Mousetrap.bind('esc', function () {
+    closeDialog();
+});
+
+//Setup Click Events
+dialogClose.addEventListener('click', closeDialog);
+talk.addEventListener('click', taimiSpeak)
