@@ -1,5 +1,5 @@
 const q = document.querySelector.bind(document);
-const dialog = q("#taimiDialog");
+const dialog = q('#taimiDialog');
 
 // not sure how we can get this to play, as autoplay is no longer enabled in chrome
 const sound = new Howl({
@@ -18,7 +18,7 @@ socket.on('connect', () => {
         if (data == 'yes') {
             startJumping();
         } else {
-            alert("By the Eternal Alchemy! What have you broke now Taimi?");
+            alert('By the Eternal Alchemy! What have you broke now Taimi?');
         }
     });
 })
@@ -51,51 +51,73 @@ startJumping = () => {
     let localJumps = 0;
     jumpinTaimi.play();
     jumpinTaimi.onplaying = () => {
-        console.log(`Jumps: ${localJumps}`);
+        // console.log(`Jumps: ${localJumps}`);
         localJumps++;
         socket.emit('jump', {
             name: socket.id
         })
     }
 }
+let currDiagCont = 0,
+    message = null;
+const dialogOpts = {
+    closes: ['I really don\'t have the time right now Taimi.', 'That\'s great, Taimi! Talk to you soon!', 'Got it, Taimi. Over and out.'],
+    continues: ['Uh huh...', 'Go on...', 'And?', 'So...', 'You\'re saying...']
+}
 
 const taimiSpeak = () => {
-    fetch('/getMarkov?sents=1', {
+    fetch('/getMarkov?sents=' + Math.ceil(Math.random() * 5), {
         cache: 'no-store'
     }).then(q => {
-        return q.text();
+        return q.json();
     }).then(r => {
-        let message = {
-            "taimi": r,
-            "replies": [{
-                    "icon": "ok",
-                    "message": "Thats great Taimi!"
-                },
-                {
-                    "icon": "exit",
-                    "message": "I really don't have the time right now Taimi."
-                }
-            ]
+        currDiagCont = 0;
+        message = {
+            taimi: r.hasContinue ? r.chunks[currDiagCont].join(' ') : r.string,
+            chunks: r.chunks,
+            replies: [{
+                icon: 'exit',
+                type: 'close'
+            }]
+        }
+        if (r.hasContinue) {
+            message.replies.unshift({
+                icon: 'arrow',
+                type: 'continue'
+            })
         }
         showDialog(message);
     })
-
-    //window.setTimeout(taimiSpeak, 3000)
 }
 
-dialog.addEventListener("click", function () {
+// dialog.addEventListener('click', function () {
+//     dialog.hidden = true;
+//     window.setTimeout(taimiSpeak, 5000);
+// })
+const closeDialog = () => {
     dialog.hidden = true;
     window.setTimeout(taimiSpeak, 5000);
-})
+}
+q('#dialogName').addEventListener('click', closeDialog);
+const continueDialog = () => {
+    currDiagCont++;
+    message.taimi = message.chunks[currDiagCont].join(' ');
+    if (currDiagCont >= message.chunks.length - 1) {
+        message.replies.shift();
+    }
+    showDialog(message);
+}
 
 const showDialog = (message) => {
-
-    q("#dialogText").innerText = message.taimi;
+    q('#dialogText').innerText = message.taimi;
     let replies = message.replies.map(r => {
-        return `<div class="replymessage"><img width="44" src="img/${r.icon}.png"/>${r.message}</div>`
+        const msg = dialogOpts[r.type+'s'][Math.floor(Math.random()*dialogOpts[r.type+'s'].length)];
+        return `<div class="replymessage" onclick="${r.type}Dialog()">
+            <img width="44" src="img/${r.icon}.png"/>${msg}
+        </div>`
     }).join('');
-    q("#dialogReply").innerHTML = replies;
+    q('#dialogReply').innerHTML = replies;
     dialog.hidden = false;
 }
 
-window.setTimeout(taimiSpeak, 3000);
+window.setTimeout(taimiSpeak, 500);
