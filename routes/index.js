@@ -126,7 +126,7 @@ router.get('/getMarkov', (req, res, next) => {
         mark = new Markov(taimi.join(' '), opts)
     const out = {
         string: mark.genMarkOut(sents),
-        hasContinue: (sents > 1 && (Math.random() > .4 || req.query.split=='true'))||sents>3
+        hasContinue: sents>1 
     }
     if (out.hasContinue) {
         out.chunks= randChunkArray(out.string.split(/(?<=\.(?!\.)|!|\?|;)/),1,2)
