@@ -17,7 +17,8 @@
             font-size: 17px;
             overflow: hidden;
             font-family: Menomonia;
-            color: white
+            color: white;
+            cursor: url(img/mouse.png), auto;
         }
 
         #JumpinTaimi {
@@ -50,7 +51,6 @@
             border: none;
             background: #000;
             color: #fff;
-            cursor: pointer;
         }
 
         #myBtn:hover {
@@ -111,6 +111,25 @@
             background-size: 490px 50px;
             background-position-y: center;
         }
+
+        #talkBtn {
+            position: absolute;
+            bottom: 200px;
+            left: calc(75vw - 235px);
+            height: 75px;
+            width: 235px;
+            z-index: 99;
+            background: url(img/talk.png);
+            background-repeat: no-repeat;
+            background-position: center;
+            padding: 22px 0 0 43px;
+        }
+
+        #talkBtn:hover {
+            background: url(img/talkHover.png);
+            background-repeat: no-repeat;
+            background-position: center;
+        }
     </style>
 </head>
 
@@ -133,10 +152,14 @@
         <div id="dialogReply">I dont know about that Taimi</div>
     </div>
 
+    <div id="talkBtn">
+        Talk [F]
+    </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.1.2/howler.core.min.js"></script>
     <script src="./js/main.js"></script>
-    
+
 
 </body>
 
