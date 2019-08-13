@@ -1,7 +1,23 @@
-import {
-    tinyMsg
-} from './tinyBlurbs.js';
-const q = document.querySelector.bind(document),
+const tinyMsg = {
+        taimi: [`TINY is Guild Wars 2's largest Asura-only guild.`],
+        chunks: [
+            [`TINY is Guild Wars 2's largest Asura-only guild.`],
+            [`We do random things like jump in place (for science), dance, and even take over cities with our tininess.`],
+            [`We will never stop growing. We will never stop waddling. We are the one and only TINY Army!`],
+            [`Why not check us out below?`]
+        ],
+        replies: [{
+            icon: 'arrow',
+            type: 'continue'
+        }, {
+            icon: 'back',
+            type: 'change'
+        }, {
+            icon: 'exit',
+            type: 'close'
+        }]
+    },
+    q = document.querySelector.bind(document),
     dialog = q('#taimiDialog'),
     talk = q('#talkBtn'),
     jumpinTaimi = q('#JumpinTaimi'),
@@ -17,11 +33,6 @@ const q = document.querySelector.bind(document),
         volume: 0.5,
         autoplay: true,
     });
-
-
-let currDiagCont = 0,
-    message = null,
-    localJumps = 0;
 
 socket.on('connect', () => {
     socket.emit('iCanHasJumps', {
@@ -49,23 +60,21 @@ socket.on('disconnect', (reason) => {
 
 //Count real jumps!!!
 const startJumping = () => {
-
     jumpinTaimi.play();
     jumpinTaimi.onplaying = () => {
         doJump();
     }
 }
+
 let currDiagCont = 0,
     currTinyCount = 0,
     message = null,
+    localJumps = 0,
     isTiny = false;
-const dialogOpts = {
-    closes: ['I really don\'t have the time right now Taimi.', 'That\'s great, Taimi! Talk to you soon!', 'Got it, Taimi. Over and out.'],
-    continues: ['Uh huh...', 'Go on...', 'And?', 'So...', 'You\'re saying...']
-}
 
 const taimiSpeak = () => {
     talk.hidden = true;
+    isTiny = false;
     fetch('/getMarkov?sents=' + Math.ceil(Math.random() * 5), {
         cache: 'no-store'
     }).then(q => {
@@ -84,10 +93,16 @@ const taimiSpeak = () => {
             }]
         }
         if (r.hasContinue) {
-            message.replies.unshift({
+            message.replies = [{
                 icon: 'arrow',
                 type: 'continue'
-            })
+            }, {
+                icon: 'back',
+                type: 'change'
+            }, {
+                icon: 'exit',
+                type: 'close'
+            }]
         }
         showDialog();
     })
@@ -100,24 +115,49 @@ const closeDialog = () => {
 
 const changeDialog = () => {
     isTiny = !isTiny;
-    if (isTiny) {
-        currTinyCount = 0;
-    } else {
-        currDiagCont = 0;
-    }
+    currTinyCount = 0;
+    currDiagCont = 0;
     showDialog();
+}
+const goDialog = () => {
+    window.location.href = 'https://tinyarmy.org/'
 }
 
 const continueDialog = () => {
-    talk.hidden = false;
-    currDiagCont++;
-    message.taimi = message.chunks[currDiagCont].join(' ');
-    if (currDiagCont >= message.chunks.length - 1) {
-        message.replies.shift();
+    // talk.hidden = false;
+    if (!isTiny) {
+        currDiagCont++;
+        message.taimi = message.chunks[currDiagCont].join(' ');
+        if (currDiagCont >= message.chunks.length - 1) {
+            message.replies = [{
+                icon: 'back',
+                type: 'change'
+            }, {
+                icon: 'exit',
+                type: 'close'
+            }]
+        }
+    } else {
+        currTinyCount++;
+        tinyMsg.taimi = tinyMsg.chunks[currTinyCount].join(' ');
+        if (currTinyCount >= tinyMsg.chunks.length - 1) {
+            tinyMsg.replies = [{
+                    icon: 'back',
+                    type: 'change'
+                }, {
+                    icon: 'wave',
+                    type: 'go'
+                },
+                {
+                    icon: 'exit',
+                    type: 'close'
+                }
+            ]
+        }
     }
-    showDialog(message);
+    showDialog();
 }
-
+// console.log('Dialog fns', continueDialog, changeDialog, closeDialog)
 
 q('#dialogName').addEventListener('click', closeDialog);
 talk.addEventListener('click', taimiSpeak)
@@ -125,7 +165,11 @@ talk.addEventListener('click', taimiSpeak)
 
 const showDialog = () => {
     //function just displays a particular dialog.
-    const mess = isTiny ? tinyMsg : message;
+    const mess = isTiny ? tinyMsg : message,
+        counter = isTiny ? currTinyCount : currDiagCont;
+        console.log('Mess?',mess)
+    mess.taimi = mess.chunks ? mess.chunks[counter] : mess.taimi;
+    console.log(mess, 'is tiny?', isTiny, 'counter', isTiny ? currTinyCount : currDiagCont)
     q('#dialogText').innerText = mess.taimi;
     let replies = mess.replies.map(r => {
         let msg = null;
@@ -139,8 +183,10 @@ const showDialog = () => {
         } else {
             if (r.type == 'continue') {
                 msg = 'Tell me more!'
-            } else if (r.type == 'exit') {
+            } else if (r.type == 'close') {
                 msg = "Thanks, but I'm not interested.";
+            } else {
+                msg = 'Yes! Please take me to the [TINY] website!'
             }
         }
 
