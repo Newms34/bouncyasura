@@ -3,142 +3,135 @@
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://d1h9a8s8eodvjz.cloudfront.net/fonts/menomonia/08-02-12/menomonia.css" rel="stylesheet"
-        type="text/css">
-    <link href="https://d1h9a8s8eodvjz.cloudfront.net/fonts/menomonia/08-02-12/menomonia-italic.css" rel="stylesheet"
-        type="text/css">
+    <link href="https://d1h9a8s8eodvjz.cloudfront.net/fonts/menomonia/08-02-12/menomonia.css" rel="stylesheet" type="text/css">
+    <link href="https://d1h9a8s8eodvjz.cloudfront.net/fonts/menomonia/08-02-12/menomonia-italic.css" rel="stylesheet" type="text/css">
     <style>
         * {
-            box-sizing: border-box;
+            box-sizing: border-box
         }
 
         body {
-            margin: 0;
-            font-size: 17px;
-            overflow: hidden;
-            font-family: Menomonia;
-            color: white;
+            color: #FFF;
             cursor: url(img/mouse.png), auto;
+            font-family: Menomonia;
+            font-size: 17px;
+            margin: 0;
+            overflow: hidden
         }
 
         #JumpinTaimi {
+            -webkit-transform: translateX(-50%) translateY(-50%);
+            height: auto;
+            left: 50%;
+            min-height: 100%;
+            min-width: 100%;
+            overflow: hidden;
             position: absolute;
             top: 50%;
-            left: 50%;
-            -webkit-transform: translateX(-50%) translateY(-50%);
             transform: translateX(-50%) translateY(-50%);
-            min-width: 100%;
-            min-height: 100%;
             width: auto;
-            height: auto;
-            z-index: -1000;
-            overflow: hidden;
+            z-index: -1000
         }
 
         .content {
-            position: fixed;
-            bottom: 0;
             background: rgba(0, 0, 0, 0.5);
+            bottom: 0;
             color: #f1f1f1;
-            width: 100%;
             padding: 20px;
+            position: fixed;
+            width: 100%
         }
 
         #myBtn {
-            width: 200px;
+            background: #000;
+            border: none;
+            color: #fff;
             font-size: 18px;
             padding: 10px;
-            border: none;
-            background: #000;
-            color: #fff;
+            width: 200px
         }
 
         #myBtn:hover {
             background: #ddd;
-            color: black;
+            color: #000
         }
 
         #taimiDialog {
-            position: absolute;
-            top: 0px;
-            left: calc(50% - 512px);
-            height: 512px;
-            width: 1024px;
-            z-index: 99;
             background-image: url(img/TaimiDialog.png);
+            height: 512px;
+            left: calc(50% - 512px);
+            position: absolute;
+            top: 0;
+            width: 1024px;
+            z-index: 99
         }
 
         #dialogName {
-            position: relative;
-            width: 130px;
-            /* height: 19px; */
-            /* background-color: antiquewhite; */
-            left: 678px;
-            top: 105px;
             font-size: 12pt;
+            left: 678px;
+            position: relative;
+            top: 105px;
+            width: 130px
         }
 
         #dialogClose {
-            position: relative;
-            width: 20px;
-            height: 20px;
-            /* background-color: antiquewhite; */
-            left: 875px;
-            top: 90px;
             font-size: 12pt;
+            height: 20px;
+            left: 875px;
+            position: relative;
+            top: 90px;
+            width: 20px
         }
 
         #dialogText {
-            position: relative;
-            width: 470px;
-            height: 75px;
-            /* background-color: aliceblue; */
-            left: 185px;
-            top: 110px;
             font-size: 12pt;
+            height: 75px;
+            left: 185px;
+            position: relative;
+            top: 110px;
+            width: 470px
         }
 
         #dialogReply {
-            position: relative;
-            width: 500px;
-            height: 200px;
-            /* background-color: aliceblue; */
-            left: 220px;
-            top: 120px;
             font-size: 12pt;
             font-style: italic;
+            height: 200px;
+            left: 220px;
+            position: relative;
+            top: 120px;
+            width: 500px
         }
 
         .replymessage {
-            height: 44px;
-            display: flex;
             align-items: center;
+            display: flex;
+            height: 44px
         }
 
         .replymessage:hover {
             background: url(img/activeBG.png);
-            background-repeat: no-repeat;
-            background-size: 490px 50px;
             background-position-y: center;
+            background-repeat: no-repeat;
+            background-size: 490px 50px
         }
 
         #talkBtn {
-            position: absolute;
-            bottom: 200px;
-            left: calc(75vw - 235px);
-            height: 75px;
-            width: 235px;
-            z-index: 99;
             background: url(img/talk.png);
-            background-repeat: no-repeat;
             background-position: center;
+            background-repeat: no-repeat;
+            bottom: 200px;
+            height: 75px;
+            left: calc(75vw - 235px);
             padding: 22px 0 0 43px;
+            position: absolute;
+            width: 235px;
+            z-index: 99
         }
 
         #talkBtn:hover {
             background: url(img/talkHover.png);
-            background-repeat: no-repeat;
             background-position: center;
+            background-repeat: no-repeat
         }
     </style>
 </head>
@@ -153,7 +146,7 @@
     <div class="content">
         <h1>Taimi</h1>
         <p>Taimi does her part to jump for science</p>
-        <button id="myBtn">Join TINY</button>
+        <a href="https://tinyarmy.org" class="joinBtn" target="_blank">Join TINY</a>
     </div>
 
     <div id="taimiDialog" hidden>

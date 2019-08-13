@@ -1,16 +1,22 @@
-const q = document.querySelector.bind(document);
-const dialog = q('#taimiDialog'),
-    talk = q('#talkBtn');
+const q = document.querySelector.bind(document),
+    dialog = q('#taimiDialog'),
+    talk = q('#talkBtn'),
+    jumpinTaimi = q('#JumpinTaimi'),
+    dialogClose = q('#dialogClose'),
+    socket = io(),
+    dialogOpts = {
+        closes: ['I really don\'t have the time right now Taimi.', 'That\'s great, Taimi! Talk to you soon!', 'Got it, Taimi. Over and out.'],
+        continues: ['Uh huh...', 'Go on...', 'And?', 'So...', 'You\'re saying...']
+    },
+    sound = new Howl({
+        src: ['./SillyChickenV2.mp3'],
+        loop: true,
+        volume: 0.5,
+        autoplay: true,
+    });
 
-// not sure how we can get this to play, as autoplay is no longer enabled in chrome
-const sound = new Howl({
-    src: ['./SillyChickenV2.mp3'],
-    loop: true,
-    volume: 0.5,
-    autoplay: true,
-});
-
-const socket = io();
+let currDiagCont = 0,
+    message = null;
 
 socket.on('connect', () => {
     socket.emit('iCanHasJumps', {
@@ -36,19 +42,12 @@ socket.on('disconnect', (reason) => {
     }
 })
 
-
-
-// setInterval(()=>{
-//     socket.emit('hb',{name:name})
-// },50)
-
 document.getElementById('myBtn').addEventListener('click', (e) => {
     window.location.assign('https://tinyarmy.org');
 })
 
 //Count real jumps!!!
-startJumping = () => {
-    const jumpinTaimi = document.getElementById('JumpinTaimi');
+const startJumping = () => {
     let localJumps = 0;
     jumpinTaimi.play();
     jumpinTaimi.onplaying = () => {
@@ -59,15 +58,9 @@ startJumping = () => {
         })
     }
 }
-let currDiagCont = 0,
-    message = null;
-const dialogOpts = {
-    closes: ['I really don\'t have the time right now Taimi.', 'That\'s great, Taimi! Talk to you soon!', 'Got it, Taimi. Over and out.'],
-    continues: ['Uh huh...', 'Go on...', 'And?', 'So...', 'You\'re saying...']
-}
 
 const taimiSpeak = () => {
-    talk.hidden=true;
+    talk.hidden = true;
     fetch('/getMarkov?sents=' + Math.ceil(Math.random() * 5), {
         cache: 'no-store'
     }).then(q => {
@@ -92,14 +85,13 @@ const taimiSpeak = () => {
     })
 }
 
-
 const closeDialog = () => {
-    talk.hidden=false;
+    talk.hidden = false;
     dialog.hidden = true;
 }
 
 const continueDialog = () => {
-    talk.hidden=false;
+    talk.hidden = false;
     currDiagCont++;
     message.taimi = message.chunks[currDiagCont].join(' ');
     if (currDiagCont >= message.chunks.length - 1) {
@@ -107,15 +99,11 @@ const continueDialog = () => {
     }
     showDialog(message);
 }
-q('#dialogName').addEventListener('click', closeDialog);
-q('#dialogClose').addEventListener('click', closeDialog);
-talk.addEventListener('click',taimiSpeak)
-
 
 const showDialog = (message) => {
     q('#dialogText').innerText = message.taimi;
     let replies = message.replies.map(r => {
-        const msg = dialogOpts[r.type+'s'][Math.floor(Math.random()*dialogOpts[r.type+'s'].length)];
+        const msg = dialogOpts[r.type + 's'][Math.floor(Math.random() * dialogOpts[r.type + 's'].length)];
         return `<div class="replymessage" onclick="${r.type}Dialog()">
             <img width="44" src="img/${r.icon}.png"/>${msg}
         </div>`
@@ -124,8 +112,14 @@ const showDialog = (message) => {
     dialog.hidden = false;
 }
 
-// window.setTimeout(taimiSpeak, 500);
-
 //Setup keyboard shortcuts
-Mousetrap.bind('f', function() { taimiSpeak(); });
-Mousetrap.bind('esc', function() { closeDialog(); });
+Mousetrap.bind('f', function () {
+    taimiSpeak();
+});
+Mousetrap.bind('esc', function () {
+    closeDialog();
+});
+
+//Setup Click Events
+dialogClose.addEventListener('click', closeDialog);
+talk.addEventListener('click', taimiSpeak)
