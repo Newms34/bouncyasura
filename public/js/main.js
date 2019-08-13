@@ -124,3 +124,7 @@ const showDialog = (message) => {
 }
 
 // window.setTimeout(taimiSpeak, 500);
+
+//Setup keyboard shortcuts
+Mousetrap.bind('f', function() { taimiSpeak(); });
+Mousetrap.bind('esc', function() { closeDialog(); });
