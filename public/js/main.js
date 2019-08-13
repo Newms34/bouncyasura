@@ -1,5 +1,6 @@
 const q = document.querySelector.bind(document);
-const dialog = q('#taimiDialog');
+const dialog = q('#taimiDialog'),
+    talk = q('#talkBtn');
 
 // not sure how we can get this to play, as autoplay is no longer enabled in chrome
 const sound = new Howl({
@@ -66,6 +67,7 @@ const dialogOpts = {
 }
 
 const taimiSpeak = () => {
+    talk.hidden=true;
     fetch('/getMarkov?sents=' + Math.ceil(Math.random() * 5), {
         cache: 'no-store'
     }).then(q => {
@@ -90,16 +92,14 @@ const taimiSpeak = () => {
     })
 }
 
-// dialog.addEventListener('click', function () {
-//     dialog.hidden = true;
-//     window.setTimeout(taimiSpeak, 5000);
-// })
+
 const closeDialog = () => {
+    talk.hidden=false;
     dialog.hidden = true;
-    window.setTimeout(taimiSpeak, 5000);
 }
-q('#dialogName').addEventListener('click', closeDialog);
+
 const continueDialog = () => {
+    talk.hidden=false;
     currDiagCont++;
     message.taimi = message.chunks[currDiagCont].join(' ');
     if (currDiagCont >= message.chunks.length - 1) {
@@ -107,6 +107,9 @@ const continueDialog = () => {
     }
     showDialog(message);
 }
+q('#dialogName').addEventListener('click', closeDialog);
+talk.addEventListener('click',taimiSpeak)
+
 
 const showDialog = (message) => {
     q('#dialogText').innerText = message.taimi;
@@ -120,4 +123,4 @@ const showDialog = (message) => {
     dialog.hidden = false;
 }
 
-window.setTimeout(taimiSpeak, 500);
+// window.setTimeout(taimiSpeak, 500);
