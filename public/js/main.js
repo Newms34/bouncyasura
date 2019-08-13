@@ -108,6 +108,7 @@ const continueDialog = () => {
     showDialog(message);
 }
 q('#dialogName').addEventListener('click', closeDialog);
+q('#dialogClose').addEventListener('click', closeDialog);
 talk.addEventListener('click',taimiSpeak)
 
 
