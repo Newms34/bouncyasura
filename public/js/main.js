@@ -82,7 +82,7 @@ const taimiSpeak = () => {
     }).then(r => {
         currDiagCont = 0;
         message = {
-            taimi: r.hasContinue ? r.chunks[currDiagCont].join(' ') : r.string,
+            taimi: r.hasContinue ? r.chunks[currDiagCont] : r.string,
             chunks: r.chunks,
             replies: [{
                 icon: 'back',
@@ -127,7 +127,7 @@ const continueDialog = () => {
     // talk.hidden = false;
     if (!isTiny) {
         currDiagCont++;
-        message.taimi = message.chunks[currDiagCont].join(' ');
+        message.taimi = message.chunks[currDiagCont];
         if (currDiagCont >= message.chunks.length - 1) {
             message.replies = [{
                 icon: 'back',
@@ -139,7 +139,7 @@ const continueDialog = () => {
         }
     } else {
         currTinyCount++;
-        tinyMsg.taimi = tinyMsg.chunks[currTinyCount].join(' ');
+        tinyMsg.taimi = tinyMsg.chunks[currTinyCount];
         if (currTinyCount >= tinyMsg.chunks.length - 1) {
             tinyMsg.replies = [{
                     icon: 'back',
@@ -168,7 +168,7 @@ const showDialog = () => {
     const mess = isTiny ? tinyMsg : message,
         counter = isTiny ? currTinyCount : currDiagCont;
         console.log('Mess?',mess)
-    mess.taimi = mess.chunks ? mess.chunks[counter] : mess.taimi;
+    mess.taimi = mess.chunks ? mess.chunks[counter].join(' ') : mess.taimi;
     console.log(mess, 'is tiny?', isTiny, 'counter', isTiny ? currTinyCount : currDiagCont)
     q('#dialogText').innerText = mess.taimi;
     let replies = mess.replies.map(r => {
