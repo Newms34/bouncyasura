@@ -69,6 +69,9 @@ const startJumping = () => {
 let currDiagCont = 0,
     currTinyCount = 0,
     message = null,
+    jumpRateAdjust = 1,
+    hasBlind = false,
+    hasFury = false,
     localJumps = 0,
     isTiny = false;
 
@@ -167,7 +170,7 @@ const showDialog = () => {
     //function just displays a particular dialog.
     const mess = isTiny ? tinyMsg : message,
         counter = isTiny ? currTinyCount : currDiagCont;
-        console.log('Mess?',mess)
+    console.log('Mess?', mess)
     mess.taimi = mess.chunks ? mess.chunks[counter].join(' ') : mess.taimi;
     console.log(mess, 'is tiny?', isTiny, 'counter', isTiny ? currTinyCount : currDiagCont)
     q('#dialogText').innerText = mess.taimi;
@@ -200,12 +203,33 @@ const showDialog = () => {
 
 const doJump = () => {
     //count it locally
-    localJumps++;
+    let jraFinal = jumpRateAdjust;
+    if (hasBlind && Math.random() > 0.5) {
+        jraFinal = 0;
+        console.log('Missed!')
+        q("#missed").style.opacity = 1;
+        q('#missed').style.left = Math.floor(Math.random()*40)+20+'%'; 
+        q('#missed').style.top = Math.floor(Math.random()*40)+20+'%'; 
+        setTimeout(function(){
+            fader('#missed')
+        },2000);
+    }
+    if (hasFury && Math.random() > 0.75) {
+        jraFinal = 2;
+        q("#crit").style.opacity = 1;
+        q('#crit').style.left = Math.floor(Math.random()*40)+20+'%'; 
+        q('#crit').style.top = Math.floor(Math.random()*40)+20+'%'; 
+        setTimeout(function(){
+            fader('#crit')
+        },2000);
+    }
+    localJumps += jraFinal;
     q('.localJumpsText').innerText = localJumps;
 
     //send it to the server
     socket.emit('jump', {
-        name: socket.id
+        name: socket.id,
+        num: jraFinal
     }, (data) => {
         q('.globalJumpsText').innerText = data.globalJumps;
         q('.totalJumpersText').innerText = data.jumpers;
@@ -223,3 +247,17 @@ Mousetrap.bind('esc', function () {
 //Setup Click Events
 dialogClose.addEventListener('click', closeDialog);
 talk.addEventListener('click', taimiSpeak)
+
+const fader=(sel)=>{
+    const fadeTarget = q(sel);
+    let fadeEffect = setInterval(function () {
+        if (!fadeTarget.style.opacity) {
+            fadeTarget.style.opacity = 1;
+        }
+        if (fadeTarget.style.opacity > 0) {
+            fadeTarget.style.opacity -= 0.1;
+        } else {
+            clearInterval(fadeEffect);
+        }
+    }, 50);
+}
