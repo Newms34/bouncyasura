@@ -20,185 +20,21 @@
     <meta property="og:site_name" content="Taimi's Accurate Bouncing Simulator">
     <meta property="og:type" content="website">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://d1h9a8s8eodvjz.cloudfront.net/fonts/menomonia/08-02-12/menomonia.css" rel="stylesheet" type="text/css">
-    <link href="https://d1h9a8s8eodvjz.cloudfront.net/fonts/menomonia/08-02-12/menomonia-italic.css" rel="stylesheet" type="text/css">
-    <style>
-        * {
-            box-sizing: border-box
-        }
-
-        body {
-            color: #FFF;
-            cursor: url(img/mouse.png), auto;
-            font-family: Menomonia;
-            font-size: 17px;
-            margin: 0;
-            overflow: hidden
-        }
-
-        #JumpinTaimi {
-            -webkit-transform: translateX(-50%) translateY(-50%);
-            height: auto;
-            left: 50%;
-            min-height: 100%;
-            min-width: 100%;
-            overflow: hidden;
-            position: absolute;
-            top: 50%;
-            transform: translateX(-50%) translateY(-50%);
-            width: auto;
-            z-index: -1000
-        }
-
-        .content {
-            background: rgba(0, 0, 0, 0.5);
-            bottom: 0;
-            color: #f1f1f1;
-            padding: 20px;
-            position: fixed;
-            width: 100%
-        }
-
-        #myBtn {
-            background: #000;
-            border: none;
-            color: #fff;
-            font-size: 18px;
-            padding: 10px;
-            width: 200px
-        }
-
-        #myBtn:hover {
-            background: #ddd;
-            color: #000
-        }
-
-        #taimiDialog {
-            background-image: url(img/TaimiDialog.png);
-            height: 512px;
-            left: calc(50% - 512px);
-            position: absolute;
-            top: 0;
-            width: 1024px;
-            z-index: 99
-        }
-
-        #dialogName {
-            font-size: 12pt;
-            left: 678px;
-            position: relative;
-            top: 105px;
-            width: 130px
-        }
-
-        #dialogClose {
-            font-size: 12pt;
-            height: 20px;
-            left: 875px;
-            position: relative;
-            top: 90px;
-            width: 20px
-        }
-
-        #dialogText {
-            font-size: 12pt;
-            height: 75px;
-            left: 185px;
-            position: relative;
-            top: 110px;
-            width: 470px
-        }
-
-        #dialogReply {
-            font-size: 12pt;
-            font-style: italic;
-            height: 200px;
-            left: 220px;
-            position: relative;
-            top: 100px;
-            width: 500px
-        }
-
-        .replymessage {
-            align-items: center;
-            display: flex;
-            height: 44px
-        }
-
-        .replymessage:hover {
-            background: url(img/activeBG.png);
-            background-position-y: center;
-            background-repeat: no-repeat;
-            background-size: 490px 50px
-        }
-
-        #talkBtn {
-            background: url(img/talk.png);
-            background-position: center;
-            background-repeat: no-repeat;
-            bottom: 200px;
-            height: 75px;
-            left: calc(75vw - 235px);
-            padding: 22px 0 0 43px;
-            position: absolute;
-            width: 235px;
-            z-index: 99
-        }
-
-        #talkBtn:hover {
-            background: url(img/talkHover.png);
-            background-position: center;
-            background-repeat: no-repeat
-        }
-
-        #stats {
-            background: url(img/statsBG.png);
-            background-position: top;
-            background-repeat: no-repeat;
-            bottom: 40px;
-            height: 255px;
-            left: 0;
-            overflow: hidden;
-            padding: 20px 0 0 20px;
-            position: absolute;
-            width: 512px;
-            z-index: 99
-        }
-
-        .characterName {
-            font-size: 2em;
-            margin-bottom: 5px
-        }
-
-        .joinTINY a {
-            background: url(img/button.png);
-            background-color: #92500c50;
-            background-blend-mode: multiply;
-            background-position-y: -90px;
-            background-repeat: no-repeat;
-            color: #FAEBD7;
-            cursor: url(img/mouse.png), auto;
-            display: block;
-            font-size: 20pt;
-            height: 45px;
-            margin-top: 10px;
-            padding: 5px 0 0 35px;
-            text-decoration: none;
-            width: 185px
-        }
-
-        .joinTINY a:hover {
-            background-blend-mode: initial;
-        }
-    </style>
+    <link href="https://d1h9a8s8eodvjz.cloudfront.net/fonts/menomonia/08-02-12/menomonia.css" rel="stylesheet"
+        type="text/css">
+    <link href="https://d1h9a8s8eodvjz.cloudfront.net/fonts/menomonia/08-02-12/menomonia-italic.css" rel="stylesheet"
+        type="text/css">
+    <link rel="stylesheet" href="./css/styles.css">
 </head>
 
 <body>
-
-    <video preload muted loop id="JumpinTaimi" oncontextmenu="return false;">
-        <source src="./JumpinTaimiV2.mp4" type="video/mp4">
-        Your browser does not support HTML5 video.
-    </video>
+    <div id="vid-cont">
+        <video preload muted loop id="JumpinTaimi">
+            <source src="./JumpinTaimiV2.mp4" type="video/mp4">
+            Your browser does not support HTML5 video.
+        </video>
+        <div id="bg"></div>
+    </div>
 
     <div id="taimiDialog" hidden>
         <div id="dialogText">Test Message</div>
@@ -224,6 +60,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.1.2/howler.core.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mousetrap/1.6.3/mousetrap.js"></script>
+    <script src="./js/fx.js"></script>
     <script src="./js/main.js"></script>
 </body>
 

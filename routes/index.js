@@ -20,7 +20,7 @@ const chunkArray = (myArray, chunk_size) => {
 const randChunkArray = (arr, min, max) => {
     // uncomment this line if you don't want the original array to be affected
     // var arr = arr.slice();
-    arr=arr.filter(q=>q && q.length && q.trim().length)
+    arr = arr.filter(q => q && q.length && q.trim().length)
     let arrs = [],
         size = 1;
     min = min || 1;
@@ -122,15 +122,14 @@ router.get('/getMarkov', (req, res, next) => {
             grp: req.query.grp && !isNaN(req.query.grp) ? req.query.grp : 2,
             noCap: !!req.query.noCap
         },
-        sents = req.query.sents && !isNaN(req.query.sents) ? req.query.sents : 3,
+        // sents = req.query.sents && !isNaN(req.query.sents) ? req.query.sents : 3,
         mark = new Markov(taimi.join(' '), opts)
     const out = {
-        string: mark.genMarkOut(sents),
-        hasContinue: sents>1 
+        string: mark.genMarkOut(3),
+        hasContinue: true
     }
-    if (out.hasContinue) {
-        out.chunks= randChunkArray(out.string.split(/(?<=\.(?!\.)|!|\?|;)/),1,2)
-    }
+    out.chunks = randChunkArray(out.string.split(/(?<=\.(?!\.)|!|\?|;)/), 1, 2)
+
     res.send(out)
 })
 
