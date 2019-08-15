@@ -81,6 +81,7 @@ const taimiSpeak = () => {
     fetch('/getMarkov?sents=' + Math.ceil(Math.random() * 5), {
         cache: 'no-store'
     }).then(q => {
+        throw new Error('crash pls')
         return q.json();
     }).then(r => {
         currDiagCont = 0;
@@ -105,6 +106,17 @@ const taimiSpeak = () => {
             }, {
                 icon: 'exit',
                 type: 'close'
+            }]
+        }
+        showDialog();
+    }).catch(q=>{
+        message = {
+            taimi: "Commander! I can't connect to taimi.jumpsfor.science!",
+            chunks: [["Commander! I can't connect to taimi.jumpsfor.science!"]],
+            replies: [{
+                icon: 'exit',
+                type: 'close',
+                isErr:true
             }]
         }
         showDialog();
@@ -178,7 +190,12 @@ const showDialog = () => {
         let msg = null;
         if (r.type != 'change' && !isTiny) {
             // this reply is just one of our normal 'continue' or 'exit' replies for auto-genned dialog
-            msg = dialogOpts[r.type + 's'][Math.floor(Math.random() * dialogOpts[r.type + 's'].length)];
+            if(r.isErr){
+                msg='Uh oh, Taimi!'
+            }else{
+
+                msg = dialogOpts[r.type + 's'][Math.floor(Math.random() * dialogOpts[r.type + 's'].length)];
+            }
         } else if (r.type == 'change' && !isTiny) {
             msg = 'Can you tell me about [TINY]?';
         } else if (r.type == 'change' && isTiny) {
