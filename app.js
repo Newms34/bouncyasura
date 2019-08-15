@@ -52,7 +52,7 @@ io.on('connection', function (socket) {
             return false;
         }
         currSockets.find(q => q.name == d.name).last = Date.now();
-        totalJumps++;
+        totalJumps+=d.num;
         fn({
             globalJumps: totalJumps,
             jumpers: currSockets.length

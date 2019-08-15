@@ -186,3 +186,10 @@ body {
 .joinTINY a:hover {
     background-blend-mode: initial;
 }
+.effect-note{
+    position: absolute;
+    left:40%;
+    top:40%;
+    opacity:0;
+    font-size:22pt;
+}
