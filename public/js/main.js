@@ -81,7 +81,6 @@ const taimiSpeak = () => {
     fetch('/getMarkov?sents=' + Math.ceil(Math.random() * 5), {
         cache: 'no-store'
     }).then(q => {
-        throw new Error('crash pls')
         return q.json();
     }).then(r => {
         currDiagCont = 0;
