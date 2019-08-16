@@ -193,6 +193,12 @@ body {
     opacity:0;
     font-size:22pt;
 }
+#fx{
+    position:fixed;
+    left:2px;
+    bottom:2px;
+    z-index:99;
+    
 
 .effect-border {
     width: 100vw;

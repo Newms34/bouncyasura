@@ -222,7 +222,7 @@ const doJump = () => {
     let jraFinal = jumpRateAdjust;
     if (hasBlind && Math.random() > 0.5) {
         jraFinal = 0;
-        console.log('Missed!')
+        // console.log('Missed!')
         q("#missed").style.opacity = 1;
         q('#missed').style.left = Math.floor(Math.random()*40)+20+'%'; 
         q('#missed').style.top = Math.floor(Math.random()*40)+20+'%'; 
@@ -277,3 +277,8 @@ const fader=(sel)=>{
         }
     }, 50);
 }
+const doRandomCondis = ()=>{
+    const theFx = Object.keys(effects).filter(q=>Math.random()<.25); 
+    setProps(theFx.join(" "))
+};
+q('#fx-btn').addEventListener('click',doRandomCondis);
