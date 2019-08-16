@@ -199,4 +199,45 @@ body {
     bottom:2px;
     z-index:99;
     
+
+.effect-border {
+    width: 100vw;
+    height: 128px;
+    position: absolute;
+    -webkit-mask-image: url(../img/bleed.png);
+    mask-image: url(../img/bleed.png);
+    background-color: #ff00006b;
+}
+
+.top-border {
+    top: 0;
+}
+
+.right-border {
+    right: -47%;
+    -webkit-transform: rotate(90deg);
+    transform: rotate(90deg);
+}
+
+.bottom-border {
+    bottom: 0;
+    -webkit-transform: rotate(180deg);
+    transform: rotate(180deg);
+}
+
+.left-border {
+    right: 47%;
+    -webkit-transform: rotate(270deg);
+    transform: rotate(270deg);
+}
+
+.show {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity .5s linear;
+}
+.hide {
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s .5s, opacity .5s linear;
 }
