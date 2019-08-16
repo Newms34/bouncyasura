@@ -87,38 +87,22 @@ const taimiSpeak = () => {
         message = {
             taimi: r.hasContinue ? r.chunks[currDiagCont] : r.string,
             chunks: r.chunks,
-            replies: [{
-                icon: 'back',
-                type: 'change'
-            }, {
-                icon: 'exit',
-                type: 'close'
-            }]
-        }
-        if (r.hasContinue) {
-            message.replies = [{
-                icon: 'arrow',
-                type: 'continue'
-            }, {
-                icon: 'back',
-                type: 'change'
-            }, {
-                icon: 'exit',
-                type: 'close'
-            }]
+            replies: []
         }
         showDialog();
-    }).catch(q=>{
+    }).catch(q => {
         message = {
             taimi: "Commander! I can't connect to taimi.jumpsfor.science!",
-            chunks: [["Commander! I can't connect to taimi.jumpsfor.science!"]],
+            chunks: [
+                ["Commander! I can't connect to taimi.jumpsfor.science!"]
+            ],
             replies: [{
                 icon: 'exit',
                 type: 'close',
-                isErr:true
+                isErr: true
             }]
         }
-        showDialog();
+        showDialog(true);
     })
 }
 
@@ -140,34 +124,15 @@ const goDialog = () => {
 const continueDialog = () => {
     // talk.hidden = false;
     if (!isTiny) {
+        //regular, auto-gen'd dialog
         currDiagCont++;
+        currTinyCount = 0;
         message.taimi = message.chunks[currDiagCont];
-        if (currDiagCont >= message.chunks.length - 1) {
-            message.replies = [{
-                icon: 'back',
-                type: 'change'
-            }, {
-                icon: 'exit',
-                type: 'close'
-            }]
-        }
-    } else {
+        // console.log('message',message,'counter',currDiagCont)
+    } else { //tiny
         currTinyCount++;
+        currDiagCont = 0;
         tinyMsg.taimi = tinyMsg.chunks[currTinyCount];
-        if (currTinyCount >= tinyMsg.chunks.length - 1) {
-            tinyMsg.replies = [{
-                    icon: 'back',
-                    type: 'change'
-                }, {
-                    icon: 'wave',
-                    type: 'go'
-                },
-                {
-                    icon: 'exit',
-                    type: 'close'
-                }
-            ]
-        }
     }
     showDialog();
 }
@@ -177,7 +142,7 @@ q('#dialogName').addEventListener('click', closeDialog);
 talk.addEventListener('click', taimiSpeak)
 
 
-const showDialog = () => {
+const showDialog = (isProblem) => {
     //function just displays a particular dialog.
     const mess = isTiny ? tinyMsg : message,
         counter = isTiny ? currTinyCount : currDiagCont;
@@ -185,13 +150,47 @@ const showDialog = () => {
     mess.taimi = mess.chunks ? mess.chunks[counter].join(' ') : mess.taimi;
     console.log(mess, 'is tiny?', isTiny, 'counter', isTiny ? currTinyCount : currDiagCont)
     q('#dialogText').innerText = mess.taimi;
+    if (!isProblem) {
+        if (mess && mess.chunks && counter < mess.chunks.length - 1) {
+            // "normal" replies
+            mess.replies = [{
+                icon: 'arrow',
+                type: 'continue'
+            }, {
+                icon: 'back',
+                type: 'change'
+            }, {
+                icon: 'exit',
+                type: 'close'
+            }]
+        } else if (isTiny) {
+            mess.replies = [{
+                icon: 'back',
+                type: 'change'
+            }, {
+                icon: 'wave',
+                type: 'go'
+            }, {
+                icon: 'exit',
+                type: 'close'
+            }];
+        } else {
+            mess.replies = [{
+                icon: 'back',
+                type: 'change'
+            }, {
+                icon: 'exit',
+                type: 'close'
+            }];
+        }
+    }
     let replies = mess.replies.map(r => {
         let msg = null;
         if (r.type != 'change' && !isTiny) {
             // this reply is just one of our normal 'continue' or 'exit' replies for auto-genned dialog
-            if(r.isErr){
-                msg='Uh oh, Taimi!'
-            }else{
+            if (r.isErr) {
+                msg = 'Uh oh, Taimi!'
+            } else {
 
                 msg = dialogOpts[r.type + 's'][Math.floor(Math.random() * dialogOpts[r.type + 's'].length)];
             }
@@ -224,20 +223,20 @@ const doJump = () => {
         jraFinal = 0;
         // console.log('Missed!')
         q("#missed").style.opacity = 1;
-        q('#missed').style.left = Math.floor(Math.random()*40)+20+'%'; 
-        q('#missed').style.top = Math.floor(Math.random()*40)+20+'%'; 
-        setTimeout(function(){
+        q('#missed').style.left = Math.floor(Math.random() * 40) + 20 + '%';
+        q('#missed').style.top = Math.floor(Math.random() * 40) + 20 + '%';
+        setTimeout(function () {
             fader('#missed')
-        },2000);
+        }, 2000);
     }
     if (hasFury && Math.random() > 0.75) {
         jraFinal = 2;
         q("#crit").style.opacity = 1;
-        q('#crit').style.left = Math.floor(Math.random()*40)+20+'%'; 
-        q('#crit').style.top = Math.floor(Math.random()*40)+20+'%'; 
-        setTimeout(function(){
+        q('#crit').style.left = Math.floor(Math.random() * 40) + 20 + '%';
+        q('#crit').style.top = Math.floor(Math.random() * 40) + 20 + '%';
+        setTimeout(function () {
             fader('#crit')
-        },2000);
+        }, 2000);
     }
     localJumps += jraFinal;
     q('.localJumpsText').innerText = localJumps;
@@ -264,7 +263,7 @@ Mousetrap.bind('esc', function () {
 dialogClose.addEventListener('click', closeDialog);
 talk.addEventListener('click', taimiSpeak)
 
-const fader=(sel)=>{
+const fader = (sel) => {
     const fadeTarget = q(sel);
     let fadeEffect = setInterval(function () {
         if (!fadeTarget.style.opacity) {
@@ -277,8 +276,8 @@ const fader=(sel)=>{
         }
     }, 50);
 }
-const doRandomCondis = ()=>{
-    const theFx = Object.keys(effects).filter(q=>Math.random()<.25); 
+const doRandomCondis = () => {
+    const theFx = Object.keys(effects).filter(q => Math.random() < .25);
     setProps(theFx.join(" "))
 };
-q('#fx-btn').addEventListener('click',doRandomCondis);
+q('#fx-btn').addEventListener('click', doRandomCondis);
