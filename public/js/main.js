@@ -284,3 +284,9 @@ const doRandomCondis = () => {
     setProps(theFx.join(" "))
 };
 q('#fx-btn').addEventListener('click', doRandomCondis);
+q('#border-btn').addEventListener('click', () => {
+    q('.effects').classList.remove("hide");
+    window.setTimeout( () => {
+        q('.effects').classList.add("hide");
+    }, 1500);
+})
