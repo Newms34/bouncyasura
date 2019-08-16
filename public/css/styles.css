@@ -10,7 +10,8 @@ body {
     margin: 0;
     overflow: hidden
 }
-#vid-cont{
+
+#vid-cont {
     /* -webkit-transform: translateX(-50%) translateY(-50%); */
     /* height: auto; */
     /* left: 50%; */
@@ -23,15 +24,17 @@ body {
     /* width: auto; */
     z-index: -1000
 }
-#vid-cont #bg{
+
+#vid-cont #bg {
     position: absolute;
-    left:0;
-    top:0;
-    content:'';
-    width:100%;
-    height:100%;
-    background:none;
+    left: 0;
+    top: 0;
+    content: '';
+    width: 100%;
+    height: 100%;
+    background: none;
 }
+
 #JumpinTaimi {
     -webkit-transform: translateX(-50%) translateY(-50%);
     height: auto;
@@ -186,18 +189,21 @@ body {
 .joinTINY a:hover {
     background-blend-mode: initial;
 }
-.effect-note{
+
+.effect-note {
     position: absolute;
-    left:40%;
-    top:40%;
-    opacity:0;
-    font-size:22pt;
+    left: 40%;
+    top: 40%;
+    opacity: 0;
+    font-size: 22pt;
+    font-family: jumpinTaimi;
 }
-#fx{
-    position:fixed;
-    left:2px;
-    bottom:2px;
-    z-index:99;
+
+#fx {
+    position: fixed;
+    left: 2px;
+    bottom: 2px;
+    z-index: 99;
 }
 
 .effect-border {
@@ -232,12 +238,13 @@ body {
 }
 
 .show {
-  visibility: visible;
-  opacity: 1;
-  transition: opacity .5s linear;
+    visibility: visible;
+    opacity: 1;
+    transition: opacity .5s linear;
 }
+
 .hide {
-  visibility: hidden;
-  opacity: 0;
-  transition: visibility 0s .5s, opacity .5s linear;
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s .5s, opacity .5s linear;
 }
