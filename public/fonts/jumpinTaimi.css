@@ -1,0 +1,12 @@
+@font-face {
+    font-family: 'jumpinTaimi';
+    src: url('jumpinTaimi.eot');
+    src: url('jumpinTaimi.eot?#iefix') format('embedded-opentype'),
+        url('jumpinTaimi.woff2') format('woff2'),
+        url('jumpinTaimi.woff') format('woff'),
+        url('jumpinTaimi.ttf') format('truetype'),
+        url('jumpinTaimi.svg#CronosPro-Regular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
