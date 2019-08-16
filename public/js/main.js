@@ -195,8 +195,9 @@ const showDialog = () => {
 
                 msg = dialogOpts[r.type + 's'][Math.floor(Math.random() * dialogOpts[r.type + 's'].length)];
             }
-        } else if (r.type == 'change' && !isTiny) {
+        } else if (r.type == 'change' && !isTiny && currDiagCont == 0) {
             msg = 'Can you tell me about [TINY]?';
+            r.icon = 'guild';
         } else if (r.type == 'change' && isTiny) {
             msg = 'You were saying earlier...';
         } else {
@@ -204,6 +205,8 @@ const showDialog = () => {
                 msg = 'Tell me more!'
             } else if (r.type == 'close') {
                 msg = "Thanks, but I'm not interested.";
+            } else if (r.type == 'change') {
+                return "";
             } else {
                 msg = 'Yes! Please take me to the [TINY] website!'
             }
