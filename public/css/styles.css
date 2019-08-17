@@ -240,11 +240,11 @@ body {
 .show {
     visibility: visible;
     opacity: 1;
-    transition: opacity .5s linear;
+    transition: opacity .3s linear;
 }
 
 .hide {
     visibility: hidden;
     opacity: 0;
-    transition: visibility 0s .5s, opacity .5s linear;
+    transition: visibility .3s .5s linear, opacity .3s 0s linear;
 }
