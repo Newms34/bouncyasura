@@ -10,6 +10,10 @@ body {
     margin: 0;
     overflow: hidden
 }
+main:{
+    width:100%;
+    height:100%;
+}
 
 #vid-cont {
     /* -webkit-transform: translateX(-50%) translateY(-50%); */
@@ -35,7 +39,7 @@ body {
     background: none;
 }
 
-#JumpinTaimi {
+.taimi-vid {
     -webkit-transform: translateX(-50%) translateY(-50%);
     height: auto;
     left: 50%;

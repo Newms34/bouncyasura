@@ -20,56 +20,68 @@
     <meta property="og:site_name" content="Taimi's Accurate Bouncing Simulator">
     <meta property="og:type" content="website">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="https://d1h9a8s8eodvjz.cloudfront.net/fonts/menomonia/08-02-12/menomonia.css">
-    <link rel="stylesheet" type="text/css" href="https://d1h9a8s8eodvjz.cloudfront.net/fonts/menomonia/08-02-12/menomonia-italic.css">
+    <link rel="stylesheet" type="text/css"
+        href="https://d1h9a8s8eodvjz.cloudfront.net/fonts/menomonia/08-02-12/menomonia.css">
+    <link rel="stylesheet" type="text/css"
+        href="https://d1h9a8s8eodvjz.cloudfront.net/fonts/menomonia/08-02-12/menomonia-italic.css">
     <link rel="stylesheet" type="text/css" href="./fonts/jumpinTaimi.css">
     <link rel="stylesheet" type="text/css" href="./css/styles.css">
 </head>
 
 <body>
-    <div id="vid-cont">
-        <video preload muted loop id="JumpinTaimi">
-            <source src="./JumpinTaimiV3.mp4" type="video/mp4">
-            Your browser does not support HTML5 video.
-        </video>
-        <div id="bg"></div>
-    </div>
-    <div id="missed" class='effect-note'>Missed!</div>
-    <div id="crit" class='effect-note'>Crit!</div>
-
-    <div id="taimiDialog" hidden>
-        <div id="dialogText">Test Message</div>
-        <div id="dialogName">Taimi</div>
-        <div id="dialogClose">&nbsp;</div>
-        <div id="dialogReply">I dont know about that Taimi</div>
-    </div>
-
-    <div id="talkBtn">
-        Talk [F]
-    </div>
-    <button id='fx-btn' class='debug'>Replace Me! (Click for effects)</button>
-    <button id='border-btn' class='debug'>Replace Me! (Click for border)</button>
-    <div id="fx"></div>
-    <div id="stats">
-        <div class="characterName">Tiny Taimi</div>
-        <div class="localJumps">Local Jumps: <span class="localJumpsText">0</span></div>
-        <div class="globalJumps">Global Jumps: <span class="globalJumpsText">0</span></div>
-        <div class="currentJumpers">Total Jumpers: <span class="totalJumpersText">0</span></div>
-        <div class="joinTINY">
-            <a href="https://tinyarmy.org" target="_blank">Join TINY</a>
+    <div id="main">
+        <div id="vid-cont">
+            <video v-for='vid in vids' preload muted v-bind:loop='vid=="jump_o"' class='taimi-vid' v-bind:id='"vid-"+vid' v-show='currVid==vid'>
+                <source v-bind:src="'./media/'+vid+'.mp4'" type="video/mp4">
+                Your browser does not support HTML5 video.
+            </video>
+            <div id="bg"></div>
         </div>
-    </div>
+        <div id="missed" class='effect-note'>Missed!</div>
+        <div id="crit" class='effect-note'>Crit!</div>
 
-    <div class="effects hide show">
-        <div class="effect-border top-border"></div>
-        <div class="effect-border right-border"></div>
-        <div class="bottom-border effect-border"></div>
-        <div class="effect-border left-border"></div>
+        <div id="taimiDialog" v-show='dialogOn'>
+            <div id="dialogText">{{activeMessage.taimi}}</div>
+            <div id="dialogName" v-on:click='closeDialog()'>Taimi</div>
+            <div id="dialogClose">&nbsp;</div>
+            <div id="dialogReply">
+                <div class="replymessage" v-on:click='doAction(btn.type)' v-for='btn in activeMessage.replies'>
+                    <img width="44" v-bind:src="'img/'+btn.icon+'.png'"/>{{btn.msg}}
+                </div>
+            </div>
+        </div>
+
+        <div id="talkBtn" v-on:click="taimiSpeak()" v-show='talkOn'>
+            Talk [F]
+        </div>
+        <button id='fx-btn' class='debug' v-on:click='doRandomCondis()'>Replace Me! (Click for effects)</button>
+        <button id='border-btn' class='debug' v-on:click='showBorders()'>Replace Me! (Click for border)</button>
+        <button id='border-btn' class='debug' v-on:click='beAfraid()'>Replace Me! (Click for spoopy)</button>
+        <div id="fx">
+                <img v-for='ef in activeFx' v-bind:src='"./img/effects/"+ef+".png"' v-bind:title ="ef+': '+getSecs(effects[ef].duration)" />
+        </div>
+        <div id="stats">
+            <div class="characterName">Tiny Taimi</div>
+            <div class="localJumps">Local Jumps: <span class="localJumpsText">{{localJumps}}</span></div>
+            <div class="globalJumps">Global Jumps: <span class="globalJumpsText">{{globalJumps}}</span></div>
+            <div class="currentJumpers">Total Jumpers: <span class="totalJumpersText">{{totalJumpers}}</span></div>
+            <div class="joinTINY">
+                <a href="https://tinyarmy.org" target="_blank">Join TINY</a>
+            </div>
+        </div>
+
+        <div class="effects hide show">
+            <div class="effect-border top-border"></div>
+            <div class="effect-border right-border"></div>
+            <div class="bottom-border effect-border"></div>
+            <div class="effect-border left-border"></div>
+        </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.1.2/howler.core.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mousetrap/1.6.3/mousetrap.js"></script>
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
     <script src="./js/fx.js"></script>
     <script src="./js/main.js"></script>
 </body>

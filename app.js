@@ -127,7 +127,7 @@ setInterval(function () {
 http.listen(process.env.PORT || 8080);
 
 app.use(function (req, res, next) {
-    var err = new Error('Not Found');
+    const err = new Error('Not Found');
     err.status = 404;
     next(err);
 });

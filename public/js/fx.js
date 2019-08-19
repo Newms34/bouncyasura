@@ -260,7 +260,10 @@ const s = document.querySelector.bind(document),
     applyProps = (t, noFx) => {
         const filtOut = `blur(${t.video.cssFilter.blur}px) brightness(${t.video.cssFilter.brightness}) hue-rotate(${t.video.cssFilter.hueRotate}deg) contrast(${t.video.cssFilter.contrast})`;
         container.style.filter = filtOut;
-        jumpinTaimi.playbackRate = t.video.playbackRate;
+        const vids = Array.from(document.querySelectorAll('.taimi-vid'))
+        vids.forEach(v=>{
+            v.playbackRate = t.video.playbackRate;
+        })
         bg.style.background = t.container.bg.background;
         jumpRateAdjust = t.jump.rate;
         if (noFx) {
