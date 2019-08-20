@@ -5,7 +5,8 @@ const s = document.querySelector.bind(document),
     fxStatus = {
         container: {
             bg: {
-                background: null
+                background: null,
+                backgroundArr: []
             },
             scaleX: 1,
             scaleY: 1
@@ -25,7 +26,13 @@ const s = document.querySelector.bind(document),
     },
     effects = {
         fury: {
-            'tint': 'hsla(0,100%,50%,0.1)',
+            tint: {
+                hue: 0,
+                sat: 100,
+                light: 50,
+                alpha: 0.1,
+                full: 'hsla(0,100%,50%,0.1)',
+            },
             timer: null,
             duration: null,
             jumpAdjust: 'fury',
@@ -37,7 +44,13 @@ const s = document.querySelector.bind(document),
             }
         },
         alacrity: {
-            'tint': 'hsla(0,100%,50%,0.1)',
+            tint: {
+                hue: 300,
+                sat: 100,
+                light: 50,
+                alpha: 0.1,
+                full: 'hsla(300,100%,50%,0.1)'
+            },
             'vidRate': 1.5,
             timer: null,
             duration: null,
@@ -74,7 +87,13 @@ const s = document.querySelector.bind(document),
             }
         },
         burning: {
-            'tint': 'linear-gradient(transparent,hsla(0,70%,40%,.4),hsla(20,100%,50%,.6),hsla(60,100%,59%,.9))',
+            tint: {
+                hue: 30,
+                sat: 100,
+                light: 40,
+                alpha: 0.3,
+                full: 'linear-gradient(transparent,hsla(0,70%,40%,}.4),hsla(20,100%,50%,.6),hsla(60,100%,59%,.9))'
+            },
             timer: null,
             duration: null,
             jumpAdjust: null,
@@ -86,7 +105,13 @@ const s = document.querySelector.bind(document),
             }
         },
         chill: {
-            'tint': 'hsla(210,100%,50%,0.1)',
+            tint: {
+                hue: 210,
+                sat: 100,
+                light: 50,
+                alpha: 0.1,
+                full: 'hsla(210,100%,50%,0.1)'
+            },
             'vidRate': 0.2,
             timer: null,
             duration: null,
@@ -122,7 +147,13 @@ const s = document.querySelector.bind(document),
             }
         },
         fear: {
-            'tint': 'hsla(120,100%,10%,0.3)',
+            tint: {
+                hue: 120,
+                sat: 100,
+                light: 10,
+                alpha: 0.3,
+                full: 'hsla(120,100%,10%,0.3)'
+            },
             'vidRate': 1.2,
             timer: null,
             duration: null,
@@ -135,7 +166,13 @@ const s = document.querySelector.bind(document),
             }
         },
         poison: {
-            'tint': 'hsla(120,100%,40%,0.2)',
+            tint: {
+                hue: 120,
+                sat: 100,
+                light: 40,
+                alpha: 0.2,
+                full: 'hsla(120,100%,40%,0.2)'
+            },
             timer: null,
             duration: null,
             jumpAdjust: null,
@@ -158,13 +195,12 @@ const s = document.querySelector.bind(document),
                 hueRotate: 0
             }
         }
-
     },
     setProps = (fx) => {
         const baseStyle = copyFx();
         hasFury = false;
         hasBlind = false;
-        console.log('trying to set FX to',fx)
+        console.log('trying to set FX to', fx)
         if (!fx || fx == null || !fx.length) {
             return applyProps(baseStyle, true);
         }
@@ -187,12 +223,12 @@ const s = document.querySelector.bind(document),
             }
             console.log('trying to apply effect', f, 'with stats', effect)
             if (effect.tint) {
-                if (baseStyle.container.bg.background == null) {
-                    baseStyle.container.bg.background = '';
-                } else {
-                    baseStyle.container.bg.background += ', '
-                }
-                baseStyle.container.bg.background += effect.tint;
+                // if (baseStyle.container.bg.background == null) {
+                //     baseStyle.container.bg.background = '';
+                // } else {
+                //     baseStyle.container.bg.background += ', '
+                // }
+                baseStyle.container.bg.backgroundArr.push(effect.tint);
             }
             if (effect.vidRate) {
                 baseStyle.video.playbackRate *= effect.vidRate;
@@ -209,12 +245,25 @@ const s = document.querySelector.bind(document),
                 hasBlind = true;
             }
         });
+        if (baseStyle.container.bg.backgroundArr.length) {
+
+            const avgHue = baseStyle.container.bg.backgroundArr.map(q => q.hue).reduce((a, b) => a + b) / baseStyle.container.bg.backgroundArr.length,
+                avgSat = baseStyle.container.bg.backgroundArr.map(q => q.sat).reduce((a, b) => a + b) / baseStyle.container.bg.backgroundArr.length,
+                avgLight = baseStyle.container.bg.backgroundArr.map(q => q.light).reduce((a, b) => a + b) / baseStyle.container.bg.backgroundArr.length,
+                avgAlpha = baseStyle.container.bg.backgroundArr.map(q => q.alpha).reduce((a, b) => a + b) / baseStyle.container.bg.backgroundArr.length;
+            // console.log('HUE', avgHue, 'SAT', avgSat, 'LIGHT', avgLight, 'ALPHA', avgAlpha,'NUM COMPS',baseStyle.container.bg.backgroundArr.length)
+            baseStyle.container.bg.background = `hsla(${avgHue},${avgSat}%,${avgLight}%,${avgAlpha})`;
+            console.log('BG COLOR',baseStyle.container.bg.background)
+        }
         applyProps(baseStyle)
     },
     applyProps = (t, noFx) => {
         const filtOut = `blur(${t.video.cssFilter.blur}px) brightness(${t.video.cssFilter.brightness}) hue-rotate(${t.video.cssFilter.hueRotate}deg) contrast(${t.video.cssFilter.contrast})`;
         container.style.filter = filtOut;
-        jumpinTaimi.playbackRate = t.video.playbackRate;
+        const vids = Array.from(document.querySelectorAll('.taimi-vid'))
+        vids.forEach(v=>{
+            v.playbackRate = t.video.playbackRate;
+        })
         bg.style.background = t.container.bg.background;
         jumpRateAdjust = t.jump.rate;
         if (noFx) {
@@ -232,7 +281,7 @@ const s = document.querySelector.bind(document),
                 theEff.duration = Math.ceil(Math.random() * 10000);
             }
             if (theEff.duration <= 0) {
-                theEff.duration=null;
+                theEff.duration = null;
                 activeFx = activeFx.filter(q => q != f);
             }
             // if(theEff.timer && theEff.duration<=0){
@@ -261,6 +310,6 @@ const s = document.querySelector.bind(document),
             str = fx.map(q => {
                 return `<img src='./img/effects/${q}.png' title ="${q}: ${getSecs(effects[q].duration)}" />`
             });
-        targ.innerHTML =str;
+        targ.innerHTML = str;
     };
 Object.freeze(fxStatus);
