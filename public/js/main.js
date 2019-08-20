@@ -299,21 +299,28 @@ const vu = new Vue({
                     // self.startJumping();
                     // self.askStart();
                 } else {
-                    alert('By the Eternal Alchemy! What have you broke now Taimi?');
+                    self.doAlert({
+                        title: "Hey Commander! You've broken the app!",
+                        recon: true
+                    })
                 }
             });
         })
 
         this.socket.on('disconnect', (reason) => {
-            console.log('socket disconnected because', reason)
             if (reason === 'io server disconnect') {
-                alert('Server disconnected! Reconnecting.');
+                self.doAlert({
+                    title: "Hey Commander! The Bouncing Server has disconnected!",
+                    recon: true
+                })
+                // alert('Server disconnected! Reconnecting.');
                 // the disconnection was initiated by the server, you need to reconnect manually
                 self.socket.connect();
             } else {
-                if (confirm('Server disconnected!\n\nDo you want to try reconnecting?')) {
-                    self.socket.connect();
-                }
+                self.doAlert({
+                    title: "Hey Commander! I can't communicate with the Bouncing Server!",
+                    recon: true
+                })
             }
         });
         Mousetrap.bind('f', function () {
@@ -324,23 +331,39 @@ const vu = new Vue({
         });
     },
     methods: {
+        doAlert: function (m) {
+            const self=this;
+            self.dialogBox.show = true;
+            self.dialogBox.title = m.title;
+            self.dialogBox.replies = [{
+                msg: "I meant to do that!",
+                icon: 'exit',
+                do: ['dialogOff']
+            }]
+            if (m.recon) {
+                self.dialogBox.replies.unshift({
+                    msg: "Uh oh! Please try to reconnect!",
+                    icon: 'wave',
+                    do: ['dialogOff', 'reconnect']
+                })
+            }
+        },
         askStart: function () {
-            // console.log('wanna start?!')
             const self = this;
-            this.dialogBox.show=true;
+            this.dialogBox.show = true;
             self.dialogBox.title = 'Ready to jump for Science?';
             self.dialogBox.replies = [{
                 msg: 'Yes! Science on!',
                 icon: 'arrow',
-                do:['dialogOff','talkOn','chainVids']
+                do: ['dialogOff', 'talkOn', 'chainVids']
             }, {
                 msg: 'Actually, I wanna visit the [TINY] website!',
                 icon: 'wave',
-                do:['dialogOff','talkOn','goDialog']
+                do: ['dialogOff', 'talkOn', 'goDialog']
             }, {
                 msg: `No, I'd rather just sit here and be boring.`,
                 icon: 'exit',
-                do:['dialogOff']
+                do: ['dialogOff']
             }];
             // self.dialogBox.show=true;
         },
@@ -349,16 +372,12 @@ const vu = new Vue({
             const vid = this.changeVid(arr.shift()),
                 self = this;
             vid.onended = function () {
-                console.log('video', vid.id, 'Has ended!', arr,'length',!!arr.length,'function',theFn)
                 if (!!arr.length) {
-                    console.log('more vids!', arr)
                     return self.chainVids(arr, theFn);
                 } else if (theFn && typeof theFn == 'function') {
                     // self.dialogBox.show = !!isStart;
-                    console.log('calling function',theFn)
                     return theFn();
                 } else {
-                    console.log('do nothin')
                     return false;
                 }
             }
@@ -388,7 +407,6 @@ const vu = new Vue({
                     //still
                     clearInterval(effect.timer);
                 }
-                console.log('trying to apply effect', f, 'with stats', effect)
                 if (effect.tint) {
                     self.copyStyle.container.bg.backgroundArr.push(effect.tint);
                 }
@@ -432,7 +450,6 @@ const vu = new Vue({
                 if (this.currVid !== 'jump_o') {
                     this.changeVid('jump_o');
                 }
-                console.log('stopping loop')
                 return false;
             }
             let afraid = false;
@@ -454,7 +471,6 @@ const vu = new Vue({
                     afraid = true;
                 }
             });
-            console.log('afraid?', afraid, 'curr vid?', this.currVid)
             if (afraid && this.currVid !== 'fear_o') {
                 this.changeVid('fear_o');
             } else if (!afraid && this.currVid !== 'jump_o') {
@@ -464,7 +480,6 @@ const vu = new Vue({
             // self.drawFx(self.activeFx);
             // self.effectDeets = 
             setTimeout(function () {
-                console.log('active FX now', self.activeFx)
                 self.setProps(self.activeFx.join(' '));
                 // setProps(null);
             }, 100)
@@ -479,7 +494,6 @@ const vu = new Vue({
             this.setProps('fear'); //for testing Fear.
         },
         startJumping: function () {
-            console.log('started jumpin! probly')
             const theVid = this.changeVid('jump_o')
             theVid.onplaying = () => {
                 this.doJump();
@@ -550,7 +564,6 @@ const vu = new Vue({
                 this.currDiagCont++;
                 this.currTinyCount = 0;
                 this.message.taimi = this.message.chunks[this.currDiagCont];
-                // console.log('message',message,'counter',currDiagCont)
             } else { //tiny
                 this.currTinyCount++;
                 this.currDiagCont = 0;
@@ -626,24 +639,25 @@ const vu = new Vue({
                 }
             });
             // q('#dialogReply').innerHTML = replies;
-
             this.dialogOn = true;
         },
         doAction: function (s, t) {
-            const self=this;
-            if (typeof s=='string') {
+            const self = this;
+            if (typeof s == 'string') {
                 this[s + 'Dialog']();
-            }else if(s instanceof Array){
-                s.forEach(q=>{
-                   
-                    if(q=='dialogOff'){
+            } else if (s instanceof Array) {
+                s.forEach(q => {
+
+                    if (q == 'dialogOff') {
                         self.dialogBox.show = false;
-                    }else if(q=='talkOn'){
-                        self.talkOn=true;
-                    }else if(q=='chainVids'){
+                    } else if (q == 'talkOn') {
+                        self.talkOn = true;
+                    } else if (q == 'chainVids') {
                         self.chainVids(['yes_o'], self.startJumping);
-                    }else if(q=='goDialog'){
+                    } else if (q == 'goDialog') {
                         self.goDialog();
+                    }else if (q=='reconnect'){
+                        self.socket.connect();
                     }
                 })
             }
@@ -653,7 +667,6 @@ const vu = new Vue({
             let jraFinal = this.jumpRateAdjust;
             if (this.hasBlind && Math.random() > 0.5) {
                 jraFinal = 0;
-                // console.log('Missed!')
                 q('#missed').style.opacity = 1;
                 q('#missed').style.left = Math.floor(Math.random() * 40) + 20 + '%';
                 q('#missed').style.top = Math.floor(Math.random() * 40) + 20 + '%';
@@ -661,6 +674,7 @@ const vu = new Vue({
                     this.fader('#missed')
                 }, 2000);
             }
+
             if (this.hasFury && Math.random() > 0.75) {
                 jraFinal *= 2;
                 q("#crit").style.opacity = 1;
