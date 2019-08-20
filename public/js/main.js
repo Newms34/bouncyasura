@@ -295,7 +295,7 @@ const vu = new Vue({
             }, (data) => {
                 if (data == 'yes') {
                     self.dialogBox.show = false;
-                    self.chainVids(['fear_o', 'idle_o'], self.askStart);
+                    self.chainVids(['fear_o', 'idle_o'], self.askStart, true);
                     // self.startJumping();
                     // self.askStart();
                 } else {
@@ -370,15 +370,19 @@ const vu = new Vue({
             }];
             // self.dialogBox.show=true;
         },
-        chainVids: function (arr, theFn) {
+        chainVids: function (arr, theFn, loopLast = false) {
             //chain a bunch of videos together. This calls each vid in sequence
             const vid = this.changeVid(arr.shift()),
                 self = this;
             vid.onended = function () {
                 if (!!arr.length) {
-                    return self.chainVids(arr, theFn);
+                    return self.chainVids(arr, theFn, loopLast);
                 } else if (theFn && typeof theFn == 'function') {
                     // self.dialogBox.show = !!isStart;
+                    if (loopLast) {
+                        vid.loop = true;
+                        vid.play();
+                    }
                     return theFn();
                 } else {
                     return false;
