@@ -1,28 +1,13 @@
 const copyObj = o => JSON.parse(JSON.stringify(o)),
     q = document.querySelector.bind(document);
-// dialog = q('#taimiDialog'),
-// talk = q('#talkBtn'),
-// jumpinTaimi = q('#JumpinTaimi'),
-// dialogClose = q('#dialogClose'),
-// socket = io(),
-// dialogOpts = {
-//     closes: ['I really don\'t have the time right now Taimi.', 'That\'s great, Taimi! Talk to you soon!', 'Got it, Taimi. Over and out.'],
-//     continues: ['Uh huh...', 'Go on...', 'And?', 'So...', 'You\'re saying...']
-// },
-// sound = new Howl({
-//     src: ['./media/SillyChickenV2.mp3'],
-//     loop: true,
-//     volume: 0.5,
-//     autoplay: true,
-// });
 
 const vu = new Vue({
     data: {
         // Data ONLY go in here!
-        dialog: q('#taimiDialog'),
-        talk: q('#talkBtn'),
+        // dialog: q('#taimiDialog'),
+        // talk: q('#talkBtn'),
         taimiVids: q('.taimi-vid'),
-        dialogClose: q('#dialogClose'),
+        // dialogClose: q('#dialogClose'),
         socket: io(),
         vids: ['fear_o', 'idle_o', 'jump_o', 'yes_o'],
         currVid: 'jump_o',
@@ -47,7 +32,7 @@ const vu = new Vue({
         totalJumpers: 0,
         isTiny: false,
         dialogOn: false,
-        talkOn: true,
+        talkOn: false,
         activeMessage: {
             taimi: 'Test Message',
             chunks: [],
@@ -295,16 +280,24 @@ const vu = new Vue({
         activeFx: [],
         bg: s('#bg'),
         container: s('#vid-cont'),
+        dialogBox: {
+            title: 'shh',
+            replies: [],
+            show: false
+        }
     },
     created: function () {
         //our "init". sorta behaves like a constructor
         const self = this;
         this.socket.on('connect', () => {
             self.socket.emit('iCanHasJumps', {
-                name: self.id
+                name: self.socket.id
             }, (data) => {
                 if (data == 'yes') {
-                    self.startJumping();
+                    self.dialogBox.show = false;
+                    self.chainVids(['fear_o', 'idle_o'], self.askStart);
+                    // self.startJumping();
+                    // self.askStart();
                 } else {
                     alert('By the Eternal Alchemy! What have you broke now Taimi?');
                 }
@@ -312,6 +305,7 @@ const vu = new Vue({
         })
 
         this.socket.on('disconnect', (reason) => {
+            console.log('socket disconnected because', reason)
             if (reason === 'io server disconnect') {
                 alert('Server disconnected! Reconnecting.');
                 // the disconnection was initiated by the server, you need to reconnect manually
@@ -328,10 +322,48 @@ const vu = new Vue({
         Mousetrap.bind('esc', function () {
             self.closeDialog();
         });
-
     },
     methods: {
-        getSecs:o => Math.floor(o / 1000) + 's',
+        askStart: function () {
+            // console.log('wanna start?!')
+            const self = this;
+            this.dialogBox.show=true;
+            self.dialogBox.title = 'Ready to jump for Science?';
+            self.dialogBox.replies = [{
+                msg: 'Yes! Science on!',
+                icon: 'arrow',
+                do:['dialogOff','talkOn','chainVids']
+            }, {
+                msg: 'Actually, I wanna visit the [TINY] website!',
+                icon: 'wave',
+                do:['dialogOff','talkOn','goDialog']
+            }, {
+                msg: `No, I'd rather just sit here and be boring.`,
+                icon: 'exit',
+                do:['dialogOff']
+            }];
+            // self.dialogBox.show=true;
+        },
+        chainVids: function (arr, theFn) {
+            //chain a bunch of videos together. This calls each vid in sequence
+            const vid = this.changeVid(arr.shift()),
+                self = this;
+            vid.onended = function () {
+                console.log('video', vid.id, 'Has ended!', arr,'length',!!arr.length,'function',theFn)
+                if (!!arr.length) {
+                    console.log('more vids!', arr)
+                    return self.chainVids(arr, theFn);
+                } else if (theFn && typeof theFn == 'function') {
+                    // self.dialogBox.show = !!isStart;
+                    console.log('calling function',theFn)
+                    return theFn();
+                } else {
+                    console.log('do nothin')
+                    return false;
+                }
+            }
+        },
+        getSecs: o => Math.floor(o / 1000) + 's',
         setProps: function (fx) {
             const self = this;
             self.copyStyle = copyObj(this.fxStatus);
@@ -397,7 +429,7 @@ const vu = new Vue({
             self.bg.style.background = t.container.bg.background;
             self.jumpRateAdjust = t.jump.rate;
             if (noFx) {
-                if(this.currVid!=='jump_o'){
+                if (this.currVid !== 'jump_o') {
                     this.changeVid('jump_o');
                 }
                 console.log('stopping loop')
@@ -418,14 +450,14 @@ const vu = new Vue({
                     theEff.duration = null;
                     self.activeFx = self.activeFx.filter(q => q != f);
                 }
-                if(f=='fear'){
-                    afraid=true;
+                if (f == 'fear') {
+                    afraid = true;
                 }
             });
-            console.log('afraid?',afraid,'curr vid?',this.currVid)
-            if(afraid && this.currVid!=='fear_o'){
+            console.log('afraid?', afraid, 'curr vid?', this.currVid)
+            if (afraid && this.currVid !== 'fear_o') {
                 this.changeVid('fear_o');
-            }else if(!afraid && this.currVid!=='jump_o'){
+            } else if (!afraid && this.currVid !== 'jump_o') {
                 this.changeVid('jump_o');
             }
             // this.changeVid('fear')
@@ -443,14 +475,12 @@ const vu = new Vue({
                 q('.effects').classList.add("hide");
             }, 1500);
         },
-        beAfraid:function(){
-            this.setProps('fear');//for testing Fear.
+        beAfraid: function () {
+            this.setProps('fear'); //for testing Fear.
         },
         startJumping: function () {
-            const vids = Array.from(document.querySelectorAll('.taimi-vid')),
-                self = this;
-            const theVid = vids.filter(q => q.id.slice(4) == self.currVid)[0];
-            theVid.play()
+            console.log('started jumpin! probly')
+            const theVid = this.changeVid('jump_o')
             theVid.onplaying = () => {
                 this.doJump();
             }
@@ -460,11 +490,11 @@ const vu = new Vue({
                 self = this;
             self.currVid = n;
             const theVid = vids.find(q => {
-                console.log('Trying to find video!',q,self.currVid)
                 return q.id.slice(4) == self.currVid
             });
             theVid.currentTime = 0;
             theVid.play();
+            return theVid;
         },
         randomVid: function () {
             this.changeVid(this.vids[Math.floor(Math.random() * this.vids.length)]);
@@ -599,8 +629,24 @@ const vu = new Vue({
 
             this.dialogOn = true;
         },
-        doAction: function (s) {
-            this[s + 'Dialog']();
+        doAction: function (s, t) {
+            const self=this;
+            if (typeof s=='string') {
+                this[s + 'Dialog']();
+            }else if(s instanceof Array){
+                s.forEach(q=>{
+                   
+                    if(q=='dialogOff'){
+                        self.dialogBox.show = false;
+                    }else if(q=='talkOn'){
+                        self.talkOn=true;
+                    }else if(q=='chainVids'){
+                        self.chainVids(['yes_o'], self.startJumping);
+                    }else if(q=='goDialog'){
+                        self.goDialog();
+                    }
+                })
+            }
         },
         doJump: function () {
             //count it locally

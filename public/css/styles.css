@@ -76,7 +76,7 @@ main:{
     color: #000
 }
 
-#taimiDialog {
+.taimiDialog {
     background-image: url(../img/TaimiDialog.png);
     height: 512px;
     left: calc(50% - 512px);
@@ -86,7 +86,7 @@ main:{
     z-index: 99
 }
 
-#dialogName {
+.dialogName {
     font-size: 12pt;
     left: 678px;
     position: relative;
@@ -94,7 +94,7 @@ main:{
     width: 130px
 }
 
-#dialogClose {
+.dialogClose {
     font-size: 12pt;
     height: 20px;
     left: 875px;
@@ -103,7 +103,7 @@ main:{
     width: 20px
 }
 
-#dialogText {
+.dialogText {
     font-size: 12pt;
     height: 75px;
     left: 185px;
@@ -112,7 +112,7 @@ main:{
     width: 470px
 }
 
-#dialogReply {
+.dialogReply {
     font-size: 12pt;
     font-style: italic;
     height: 200px;
