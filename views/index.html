@@ -64,9 +64,11 @@
         <div id="talkBtn" v-on:click="taimiSpeak()" v-show='talkOn'>
             Talk [F]
         </div>
-        <button id='fx-btn' class='debug' v-on:click='doRandomCondis()'>Replace Me! (Click for effects)</button>
-        <button id='border-btn' class='debug' v-on:click='showBorders()'>Replace Me! (Click for border)</button>
-        <button id='border-btn' class='debug' v-on:click='beAfraid()'>Replace Me! (Click for spoopy)</button>
+        <div class="debug hide">
+            <button id='fx-btn' v-on:click='doRandomCondis()'>Replace Me! (Click for effects)</button>
+            <button id='border-btn' v-on:click='showBorders()'>Replace Me! (Click for border)</button>
+            <button id='border-btn' v-on:click='beAfraid()'>Replace Me! (Click for spoopy)</button>
+        </div>
         <div id="fx">
                 <img v-for='ef in activeFx' v-bind:src='"./img/effects/"+ef+".png"' v-bind:title ="ef+': '+getSecs(effects[ef].duration)" />
         </div>

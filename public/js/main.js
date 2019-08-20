@@ -329,6 +329,9 @@ const vu = new Vue({
         Mousetrap.bind('esc', function () {
             self.closeDialog();
         });
+        Mousetrap.bind('up up down down left right left right b a enter', function() {
+            self.showDebug();
+        });
     },
     methods: {
         doAlert: function (m) {
@@ -570,6 +573,9 @@ const vu = new Vue({
                 this.tinyMsg.taimi = this.tinyMsg.chunks[this.currTinyCount];
             }
             this.showDialog();
+        },
+        showDebug: function () {
+            q('.debug').classList.remove("hide");
         },
         showDialog: function (isProblem) {
             //function just displays a particular dialog.
