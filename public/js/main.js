@@ -3,9 +3,7 @@ const copyObj = o => JSON.parse(JSON.stringify(o)),
 
 const vu = new Vue({
     data: {
-        // Data ONLY go in here!
-        // dialog: q('#taimiDialog'),
-        // talk: q('#talkBtn'),
+
         taimiVids: q('.taimi-vid'),
         // dialogClose: q('#dialogClose'),
         socket: io(),
@@ -278,13 +276,14 @@ const vu = new Vue({
             }
         },
         activeFx: [],
-        bg: s('#bg'),
+        bg: s('#vid-cont #bg'),
         container: s('#vid-cont'),
         dialogBox: {
             title: 'shh',
             replies: [],
             show: false
-        }
+        },
+        randoBtn:false
     },
     created: function () {
         //our "init". sorta behaves like a constructor
@@ -296,8 +295,6 @@ const vu = new Vue({
                 if (data == 'yes') {
                     self.dialogBox.show = false;
                     self.chainVids(['fear_o', 'idle_o'], self.askStart, true);
-                    // self.startJumping();
-                    // self.askStart();
                 } else {
                     self.doAlert({
                         title: "Hey Commander! You've broken the app!",
@@ -325,6 +322,9 @@ const vu = new Vue({
         });
         Mousetrap.bind('f', function () {
             self.taimiSpeak();
+        });
+        Mousetrap.bind('0', function () {
+            self.doRandomCondis();
         });
         Mousetrap.bind('esc', function () {
             self.closeDialog();
@@ -358,7 +358,7 @@ const vu = new Vue({
             self.dialogBox.replies = [{
                 msg: 'Yes! Science on!',
                 icon: 'arrow',
-                do: ['dialogOff', 'talkOn', 'chainVids']
+                do: ['dialogOff', 'talkOn', 'chainVids','randoOn']
             }, {
                 msg: 'Actually, I wanna visit the [TINY] website!',
                 icon: 'wave',
@@ -396,6 +396,7 @@ const vu = new Vue({
             self.hasFury = false;
             self.hasBlind = false;
             if (!fx || fx == null || !fx.length) {
+                self.randoBtn=true
                 return self.applyProps(self.copyStyle, true);
             }
             //fx is a string of condis and/or boons, i.e., chill cripple fury 
@@ -411,13 +412,12 @@ const vu = new Vue({
                     return false; //can't find this effect.
                 }
                 if (effect.timer) {
-                    //still
                     clearInterval(effect.timer);
                 }
                 if (effect.tint) {
                     self.copyStyle.container.bg.backgroundArr.push(effect.tint);
                 }
-                if (effect.vidRate) {
+                if (effect.vidRate || effect.vidRate===0) {
                     self.copyStyle.video.playbackRate *= effect.vidRate;
                 }
                 self.copyStyle.video.cssFilter.blur += effect.cssFilter.blur;
@@ -430,6 +430,9 @@ const vu = new Vue({
                     self.hasFury = true;
                 } else if (effect.jumpAdjust == 'blind') {
                     self.hasBlind = true;
+                } else if(!!effect.isImmob){
+                    self.isImmob=true;
+                    self.copyStyle.video.playbackRate=0;
                 }
             });
             if (self.copyStyle.container.bg.backgroundArr.length) {
@@ -449,9 +452,12 @@ const vu = new Vue({
                 vids = Array.from(document.querySelectorAll('.taimi-vid'))
             self.container.style.filter = filtOut;
             vids.forEach(v => {
+                v.style.filter = filtOut;
                 v.playbackRate = t.video.playbackRate;
-            })
-            self.bg.style.background = t.container.bg.background;
+            });
+            // console.log('Background stuff',t.container.bg.background,'and bg container is',self.bg,'filter',filtOut)
+            document.querySelector('#bg').style.background = t.container.bg.background;
+            // document.querySelector('#bg').style.background='#f00'
             self.jumpRateAdjust = t.jump.rate;
             if (noFx) {
                 if (this.currVid !== 'jump_o') {
@@ -464,6 +470,9 @@ const vu = new Vue({
             copyObj(self.activeFx).forEach(f => {
                 // if this effect does not already have a timer, it's not been "recorded"
                 const theEff = self.effects[f];
+                if(!theEff){
+                    return false;//cannot find fx!
+                }
                 if (theEff.duration !== null) {
                     theEff.duration -= 100;
                 } else {
@@ -483,6 +492,8 @@ const vu = new Vue({
             } else if (!afraid && this.currVid !== 'jump_o') {
                 this.changeVid('jump_o');
             }
+            Array.from(document.querySelectorAll('.taimi-vid')).forEach(q=>q.playbackRate = t.video.playbackRate);
+            // console.log('EFFECTS, MAYBE',self.activeFx,t.video)
             // this.changeVid('fear')
             // self.drawFx(self.activeFx);
             // self.effectDeets = 
@@ -491,14 +502,14 @@ const vu = new Vue({
                 // setProps(null);
             }, 100)
         },
-        showBorders: function () {
+        showBorders: function (col) {
             q('.effects').classList.remove("hide");
             window.setTimeout(() => {
                 q('.effects').classList.add("hide");
             }, 1500);
         },
-        beAfraid: function () {
-            this.setProps('fear'); //for testing Fear.
+        beCold: function () {
+            self.bg.style.background = 'rgba(0, 128, 255, 0.1)'
         },
         startJumping: function () {
             const theVid = this.changeVid('jump_o')
@@ -662,6 +673,8 @@ const vu = new Vue({
                         self.dialogBox.show = false;
                     } else if (q == 'talkOn') {
                         self.talkOn = true;
+                    }else if(q=='randoOn'){
+                        self.randoBtn=true;
                     } else if (q == 'chainVids') {
                         self.chainVids(['yes_o'], self.startJumping);
                     } else if (q == 'goDialog') {
@@ -675,35 +688,38 @@ const vu = new Vue({
         doJump: function () {
             //count it locally
             let jraFinal = this.jumpRateAdjust;
-            if (this.hasBlind && Math.random() > 0.5) {
+            const self=this;
+            if (self.hasBlind && Math.random() > 0.5) {
+                //if we're blind, we have a 50% of NO jumps "hitting"
                 jraFinal = 0;
                 q('#missed').style.opacity = 1;
                 q('#missed').style.left = Math.floor(Math.random() * 40) + 20 + '%';
                 q('#missed').style.top = Math.floor(Math.random() * 40) + 20 + '%';
                 setTimeout(function () {
-                    this.fader('#missed')
+                    self.fader('#missed')
                 }, 2000);
             }
-
-            if (this.hasFury && Math.random() > 0.75) {
+            
+            if (self.hasFury && Math.random() > 0.75) {
+                //if we've got fury (+ crit chance in game), small chance of doublestrike. Note that blind precludes this
                 jraFinal *= 2;
                 q("#crit").style.opacity = 1;
                 q('#crit').style.left = Math.floor(Math.random() * 40) + 20 + '%';
                 q('#crit').style.top = Math.floor(Math.random() * 40) + 20 + '%';
                 setTimeout(function () {
-                    this.fader('#crit')
+                    self.fader('#crit')
                 }, 2000);
             }
-            this.localJumps += jraFinal;
-            // q('.localJumpsText').innerText = this.localJumps;
+            self.localJumps += jraFinal;
+            // q('.localJumpsText').innerText = self.localJumps;
 
             //send it to the server
-            this.socket.emit('jump', {
-                name: this.socket.id,
+            self.socket.emit('jump', {
+                name: self.socket.id,
                 num: jraFinal
             }, (data) => {
-                this.globalJumps = data.globalJumps;
-                this.totalJumpers = data.jumpers;
+                self.globalJumps = data.globalJumps;
+                self.totalJumpers = data.jumpers;
             })
         },
         fader: function (sel) {
@@ -719,8 +735,11 @@ const vu = new Vue({
                 }
             }, 50);
         },
-        doRandomCondis: function () {
+        doRandomCondis: function (disableRando) {
             const self = this;
+            if(disableRando){
+                self.randoBtn = false;
+            }
             const theFx = Object.keys(self.effects).filter(q => Math.random() < .25);
             self.setProps(theFx.join(" "))
         }

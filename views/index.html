@@ -36,7 +36,7 @@
                 <source v-bind:src="'./media/'+vid+'.mp4'" type="video/mp4">
                 Your browser does not support HTML5 video.
             </video>
-            <div id="bg"></div>
+            <div id="bg" data-something='HELLO'></div>
         </div>
         <div id="missed" class='effect-note'>Missed!</div>
         <div id="crit" class='effect-note'>Crit!</div>
@@ -63,6 +63,9 @@
             </div>
         <div id="talkBtn" v-on:click="taimiSpeak()" v-show='talkOn'>
             Talk [F]
+        </div>
+        <div id="rando-fx-btn" v-on:click="doRandomCondis(true)" v-show='randoBtn'>
+            Roll the Dice! [0]
         </div>
         <div class="debug hide">
             <button id='fx-btn' v-on:click='doRandomCondis()'>Replace Me! (Click for effects)</button>
