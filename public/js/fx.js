@@ -109,7 +109,7 @@ const s = document.querySelector.bind(document),
                 hue: 210,
                 sat: 100,
                 light: 50,
-                alpha: 0.1,
+                alpha: 0.5,
                 full: 'hsla(210,100%,50%,0.1)'
             },
             'vidRate': 0.2,
@@ -186,6 +186,7 @@ const s = document.querySelector.bind(document),
         immob: {
             'vidRate': 0,
             timer: null,
+            isImmob:true,
             duration: null,
             jumpAdjust: 0,
             cssFilter: {
