@@ -52,6 +52,7 @@ io.on('connection', function (socket) {
             return false;
         }
         currSockets.find(q => q.name == d.name).last = Date.now();
+        if(isNaN(Number(d.num))||Number(d.num)<0) d.num=0;
         totalJumps+=d.num;
         fn({
             globalJumps: totalJumps,
