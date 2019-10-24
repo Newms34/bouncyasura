@@ -6,11 +6,32 @@
   "dependencies": {
     "axios": "^0.19.0",
     "body-parser": "^1.19.0",
+    "chalk": "^2.4.2",
+    "chalk-image": "^1.0.2",
+    "del": "^5.1.0",
     "express": "^4.17.1",
     "path": "^0.12.7",
-    "socket.io": "^2.2.0"
+    "socket.io": "^2.2.0",
+    "through2": "^3.0.1"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@babel/core": "^7.6.4",
+    "@babel/plugin-transform-async-to-generator": "^7.5.0",
+    "@babel/preset-env": "^7.6.3",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-es2015": "^6.24.1",
+    "gulp": "^4.0.2",
+    "gulp-add-src": "^1.0.0",
+    "gulp-babel": "^8.0.0",
+    "gulp-clean-css": "^4.2.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-iife": "^0.4.0",
+    "gulp-jshint": "^2.1.0",
+    "gulp-rename": "^1.4.0",
+    "gulp-sass": "^4.0.2",
+    "gulp-terser": "^1.2.0",
+    "jshint": "^2.10.2"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon app.js --ignore bounceRecord.json"
