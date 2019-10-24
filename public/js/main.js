@@ -712,7 +712,7 @@ const vu = new Vue({
             }
             self.localJumps += jraFinal;
             // q('.localJumpsText').innerText = self.localJumps;
-
+            console.log('Boing!',jraFinal,'for',self.socket.id)
             //send it to the server
             self.socket.emit('jump', {
                 name: self.socket.id,
