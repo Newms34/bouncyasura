@@ -788,6 +788,13 @@ let wind = {
 }
 
 const letitsnow = () => {
+
+    //change song 
+    sound.unload();
+    sound._src = "./silent-night.mp3";
+    sound.load();
+    sound.play();
+
     const snow = new Shader(holder, {
         depthTest: false,
         texture: snowflake,
