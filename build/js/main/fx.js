@@ -201,11 +201,11 @@ const s = document.querySelector.bind(document),
         const baseStyle = copyFx();
         hasFury = false;
         hasBlind = false;
-        console.log('trying to set FX to', fx)
+        console.log('trying to set FX to', fx);
         if (!fx || fx == null || !fx.length) {
             return applyProps(baseStyle, true);
         }
-        console.log('incoming fx', fx)
+        console.log('incoming fx', fx);
         //fx is a string of condis and/or boons, i.e., chill cripple fury 
         activeFx = fx.split(' ');
         let videoFilter = null, //eventually we'll average this. For now, just take the last item
@@ -222,7 +222,7 @@ const s = document.querySelector.bind(document),
                 //still
                 clearInterval(effect.timer);
             }
-            console.log('trying to apply effect', f, 'with stats', effect)
+            console.log('trying to apply effect', f, 'with stats', effect);
             if (effect.tint) {
                 // if (baseStyle.container.bg.background == null) {
                 //     baseStyle.container.bg.background = '';
@@ -254,21 +254,21 @@ const s = document.querySelector.bind(document),
                 avgAlpha = baseStyle.container.bg.backgroundArr.map(q => q.alpha).reduce((a, b) => a + b) / baseStyle.container.bg.backgroundArr.length;
             // console.log('HUE', avgHue, 'SAT', avgSat, 'LIGHT', avgLight, 'ALPHA', avgAlpha,'NUM COMPS',baseStyle.container.bg.backgroundArr.length)
             baseStyle.container.bg.background = `hsla(${avgHue},${avgSat}%,${avgLight}%,${avgAlpha})`;
-            console.log('BG COLOR',baseStyle.container.bg.background)
+            console.log('BG COLOR',baseStyle.container.bg.background);
         }
-        applyProps(baseStyle)
+        applyProps(baseStyle);
     },
     applyProps = (t, noFx) => {
         const filtOut = `blur(${t.video.cssFilter.blur}px) brightness(${t.video.cssFilter.brightness}) hue-rotate(${t.video.cssFilter.hueRotate}deg) contrast(${t.video.cssFilter.contrast})`;
         container.style.filter = filtOut;
-        const vids = Array.from(document.querySelectorAll('.taimi-vid'))
+        const vids = Array.from(document.querySelectorAll('.taimi-vid'));
         vids.forEach(v=>{
             v.playbackRate = t.video.playbackRate;
-        })
+        });
         bg.style.background = t.container.bg.background;
         jumpRateAdjust = t.jump.rate;
         if (noFx) {
-            console.log('stopping loop')
+            console.log('stopping loop');
             return false;
         }
         // note we're copying the array, just in case.
@@ -296,20 +296,20 @@ const s = document.querySelector.bind(document),
             //     },250);
             //     theEff.duration = Math.ceil(Math.random()*10000)
             // }
-        })
+        });
         drawFx(activeFx);
         setTimeout(function () {
-            console.log('active FX now', activeFx)
+            console.log('active FX now', activeFx);
             setProps(activeFx.join(' '));
             // setProps(null);
-        }, 100)
+        }, 100);
     },
     copyFx = () => JSON.parse(JSON.stringify(fxStatus)),
     drawFx = fx => {
         const targ = s('#fx'),
             getSecs = o => Math.floor(o / 1000) + 's',
             str = fx.map(q => {
-                return `<img src='./img/effects/${q}.png' title ="${q}: ${getSecs(effects[q].duration)}" />`
+                return `<img src='./img/effects/${q}.png' title ="${q}: ${getSecs(effects[q].duration)}" />`;
             });
         targ.innerHTML = str;
     };

@@ -1270,4 +1270,4 @@ module.exports  = ["Braham! There you are.",
 "This is huge. I have to revise my entire thesis. No it'll be a monograph. No, wait, it'll be a six-volume treatise! Yeah!",
 "Um. \"The Elder Dragons, reconsidered.\" My magnum opus. I mean, how many researchers get this kind of opportunity? Huh?",
 "He'll have fun! The skyscales alone are worth like a dozen papers. They are so much cooler than bugs anyway.",
-"Ah - wait. Think Aurene still has time for me? I have got to get a interview with her. It'll be the first chapter. Ha!"]
+"Ah - wait. Think Aurene still has time for me? I have got to get a interview with her. It'll be the first chapter. Ha!"];

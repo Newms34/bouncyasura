@@ -60,7 +60,7 @@ const reporterFn = function (results, data, opts = {}) {
 gulp.task('lint', function () {
     let alreadyRan = false,
         semisDone = false;
-    return gulp.src(['build/js/*.js', 'build/js/**/*.js'])
+    return gulp.src(['build/js/main/*.js', 'build/js/main/**/*.js','build/js/admin/*.js', 'build/js/admin/**/*.js'])
         .pipe(th2.obj((file, enc, cb) => {
             if (!alreadyRan) {
                 drawTitle('Front-End Linting');
@@ -78,7 +78,7 @@ gulp.task('lint', function () {
 gulp.task('lintBE', function () {
     let alreadyRan = false;
     return gulp
-        .src(['routes/*.js', 'routes/**/*.js', 'models/*.js', 'models/**/*.js'])
+        .src(['routes/*.js', 'routes/**/*.js'])
         .pipe(th2.obj((file, enc, cb) => {
             if (!alreadyRan) {
                 drawTitle('Back-End Linting');
