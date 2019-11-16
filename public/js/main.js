@@ -262,6 +262,8 @@ Mousetrap.bind('esc', function () {
     closeDialog();
 });
 
+Mousetrap.bind('s n o w', letitsnow);
+
 //Setup Click Events
 dialogClose.addEventListener('click', closeDialog);
 talk.addEventListener('click', taimiSpeak)
