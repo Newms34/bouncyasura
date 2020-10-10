@@ -7,7 +7,7 @@ fetch('/stats', {
     const jumps = document.querySelector('#jumpTotal'),
         comps = document.querySelector('#compTotal');
     jumps.innerText = r.total == 1 ? '1 time' : r.total + ' times';
-    comps.innerText = r.maxComps == 1 ? '1 computer' : r.maxComps + ' computers'
+    comps.innerText = r.maxComps == 1 ? '1 computer' : r.maxComps + ' computers';
     doData(r);
 });
 setInterval(function () {
@@ -20,14 +20,14 @@ setInterval(function () {
         const jumps = document.querySelector('#jumpTotal'),
             comps = document.querySelector('#compTotal');
         jumps.innerText = r.total == 1 ? '1 time' : r.total + ' times';
-        comps.innerText = r.maxComps == 1 ? '1 computer' : r.maxComps + ' computers'
+        comps.innerText = r.maxComps == 1 ? '1 computer' : r.maxComps + ' computers';
         redoData(r);
     });
-}, 2000)
+}, 2000);
 
 document.getElementById('back-btn').addEventListener('click', (e) => {
     window.location.assign('../');
-})
+});
 
 let historyChart = null,
     chartConfig = null;
@@ -61,13 +61,13 @@ const doData = (d) => {
                 }]
             }
         }
-    }
+    };
     // console.log(chartConfig)
     historyChart = new Chart(ctx, chartConfig);
-}
+};
 const redoData = d => {
     // console.log(historyChart)
-    chartConfig.data.labels = d.perSecondData.map(q => new Date(q.t).toLocaleString())
+    chartConfig.data.labels = d.perSecondData.map(q => new Date(q.t).toLocaleString());
     chartConfig.data.datasets[0].data = d.perSecondData.map(q => Math.floor(q.n * 1000) / 1000);
     historyChart.update();
-}
+};

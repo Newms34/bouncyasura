@@ -31,6 +31,7 @@
 
 <body>
     <div id="main">
+        <div id="snow"></div>
         <div id="vid-cont">
             <video v-for='vid in vids' preload muted v-bind:loop='vid=="jump_o"' class='taimi-vid' v-bind:id='"vid-"+vid' v-show='currVid==vid'>
                 <source v-bind:src="'./media/'+vid+'.mp4'" type="video/mp4">
@@ -64,9 +65,9 @@
         <div id="talkBtn" v-on:click="taimiSpeak()" v-show='talkOn'>
             Talk [F]
         </div>
-        <div id="rando-fx-btn" v-on:click="doRandomCondis(true)" v-show='randoBtn'>
+        <!-- <div id="rando-fx-btn">
             Roll the Dice! [0]
-        </div>
+        </div> -->
         <div class="debug hide">
             <button id='fx-btn' v-on:click='doRandomCondis()'>Replace Me! (Click for effects)</button>
             <button id='border-btn' v-on:click='showBorders()'>Replace Me! (Click for border)</button>
@@ -91,14 +92,19 @@
             <div class="bottom-border effect-border"></div>
             <div class="effect-border left-border"></div>
         </div>
+        <div id="chest" v-on:mouseover='chestMouse=true' v-on:mouseout='chestMouse=false'  v-on:click="doRandomCondis(true)" v-show='randoBtn'>
+            <img src="./img/chestclosed.png" alt="Get some boons (maybe)!" v-show='!chestMouse'>
+            <img src="./img/chestopen.png" alt="Get some boons (maybe)!" v-show='chestMouse'>
+        </div>
     </div>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+    <!-- uncomment below if you'd prefer to use remote versions! -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.1.2/howler.core.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mousetrap/1.6.3/mousetrap.js"></script>
-    <script src="https://unpkg.com/vue/dist/vue.js"></script>
-    <script src="./js/fx.js"></script>
-    <script src="./js/main.js"></script>
+    <script src="https://unpkg.com/vue/dist/vue.min.js"></script> -->
+    <!-- <script src="./js/fx.js"></script> -->
+    <!-- <script src="./js/main.js"></script> -->
+    <script src="./js/main.min.js"></script>
 </body>
 
 </html>

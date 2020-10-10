@@ -1,10 +1,10 @@
 const express = require('express'),
     path = require('path'),
     bodyParser = require('body-parser'),
-    fs = require('fs');
-
-const app = express();
-const routes = require('./routes');
+    fs = require('fs'),
+    app = express(),
+    routes = require('./routes'),
+    ci = require('chalk-image');
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'html');
@@ -52,7 +52,7 @@ io.on('connection', function (socket) {
             return false;
         }
         currSockets.find(q => q.name == d.name).last = Date.now();
-        if(isNaN(Number(d.num))||Number(d.num)<0) d.num=0;
+        if(isNaN(Number(d.num))) d.num=0; //we NEED to allow d.num<0 for "fear" condition
         totalJumps+=d.num;
         fn({
             globalJumps: totalJumps,
@@ -125,7 +125,10 @@ setInterval(function () {
 }, 100)
 //set port, or process.env if not local
 
-http.listen(process.env.PORT || 8080);
+http.listen(process.env.PORT || 8080,function(o){
+    ci.drawImg('./public/img/smolTaimi.png',{colMode:'16'})
+});
+
 
 app.use(function (req, res, next) {
     const err = new Error('Not Found');

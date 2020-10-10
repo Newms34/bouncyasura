@@ -13,14 +13,14 @@ const chunkArray = (myArray, chunk_size) => {
         // Do something if you want with the group
         tempArray.push(myChunk);
     }
-    console.log('Random array member', tempArray[Math.floor(Math.random() * tempArray.length)])
+    console.log('Random array member', tempArray[Math.floor(Math.random() * tempArray.length)]);
     return tempArray;
-}
+};
 
 const randChunkArray = (arr, min, max) => {
     // uncomment this line if you don't want the original array to be affected
     // var arr = arr.slice();
-    arr = arr.filter(q => q && q.length && q.trim().length)
+    arr = arr.filter(q => q && q.length && q.trim().length);
     let arrs = [],
         size = 1;
     min = min || 1;
@@ -30,7 +30,7 @@ const randChunkArray = (arr, min, max) => {
         arrs.push(arr.splice(0, size));
     }
     return arrs;
-}
+};
 
 class Markov {
     constructor(string, opts) {
@@ -45,8 +45,8 @@ class Markov {
         this.makeObj();
     }
     makeObj() {
-        console.log('group size', this.grpSize)
-        console.log('raw inp length', this.rawInput && this.rawInput.length, typeof this.rawInput)
+        console.log('group size', this.grpSize);
+        console.log('raw inp length', this.rawInput && this.rawInput.length, typeof this.rawInput);
         this.wrds = chunkArray(this.rawInput.split(/(\s|\n|\r)/).filter(q => q && q.length && q.trim().length), this.grpSize); //basal array, before grouping;
         const uniq = [...new Set(this.wrds)];
         let i = 0;
@@ -63,7 +63,7 @@ class Markov {
                     }
                 }
             }
-        })
+        });
     }
     getRandoWrd(o) {
         const freqArr = [],
@@ -73,7 +73,7 @@ class Markov {
             for (i = 0; i < o[f]; i++) {
                 freqArr.push(f);
             }
-        })
+        });
         return freqArr[Math.floor(Math.random() * freqArr.length)];
     }
     genMarkOut(sents, wrd) {
@@ -123,15 +123,14 @@ router.get('/getMarkov', (req, res, next) => {
             noCap: !!req.query.noCap
         },
         // sents = req.query.sents && !isNaN(req.query.sents) ? req.query.sents : 3,
-        mark = new Markov(taimi.join(' '), opts)
+        mark = new Markov(taimi.join(' '), opts);
     const out = {
         string: mark.genMarkOut(3),
         hasContinue: true
-    }
-    out.chunks = randChunkArray(out.string.split(/(?<=\.(?!\.)|!|\?|;)/), 1, 2)
-
-    res.send(out)
-})
+    };
+    out.chunks = randChunkArray(out.string.split(/(?<=\.(?!\.)|!|\?|;)/), 1, 2);
+    res.send(out);
+});
 
 // res.sendFile(path.join(__dirname, '../public', 'index1.html'));
 module.exports = router;
