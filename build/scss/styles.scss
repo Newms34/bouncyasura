@@ -169,7 +169,17 @@ body {
       filter: hue-rotate(-55deg);
   }
 }
-
+#snow{
+  display:block;
+  position:fixed;
+  left:0;
+  top:0;
+  right:0;
+  top:0;
+  width:100%;
+  height:100%;
+  pointer-events: none;
+}
 #stats {
   background: url(../img/statsBG.png);
   background-position: top;
@@ -290,4 +300,32 @@ body {
     min-width: 100%;
     min-height: 100%;
     filter: sepia(1);
+}
+
+#chest{
+  position:fixed;
+  right:2px;
+  transform-origin: 50% 50%;
+  bottom:2px;
+  animation:none;
+  &:hover{
+    animation: wiggle 1s ease infinite;
+  }
+}
+@keyframes wiggle{
+  0% {
+    transform:rotateZ(0deg);
+  }
+  25% {
+    transform:rotateZ(-10deg);
+  }
+  50% {
+    transform:rotateZ(0deg);
+  }
+  75% {
+    transform:rotateZ(10deg);
+  }
+  80% {
+    transform:rotateZ(0deg);
+  }
 }

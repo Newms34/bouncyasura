@@ -241,7 +241,7 @@ gulp.task('watch', function () {
 gulp.task('render', gulp.series('lint', 'lintBE', 'sass', 'scriptsMain','scriptsAdmin','cleanMe'))
 
 // Default Task
-gulp.task('default', gulp.series('lint', 'lintBE', 'sass', 'scriptsMain','scriptsAdmin', 'cleanMe','watch'));
+gulp.task('default', gulp.series('lint', 'lintBE', 'sass', 'scriptsMain','scriptsAdmin','cleanMe','watch'));
 
 let currColInd = 0;
 
