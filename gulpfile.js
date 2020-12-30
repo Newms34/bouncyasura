@@ -10,10 +10,16 @@ const jshint = require('gulp-jshint'),
     cleany = require('gulp-clean-css'),
     babel = require('gulp-babel'),
     addSrc = require('gulp-add-src'),
+    cachebust = require('gulp-cachebust'),
+    replace = require('gulp-replace'),
+    cabu = new cachebust(),
     iife = require('gulp-iife'),
     th2 = require('through2'),
     chalk = require('chalk'),
-    del = require ('del');
+    devVue = 'https://cdn.jsdelivr.net/npm/vue/dist/vue.js',
+    prodVue = 'https://cdn.jsdelivr.net/npm/vue@2.6.12',
+    cleanF = require('gulp-clean'),
+    del = require('del');
 let sassStart = 0,
     jsStart = 0;
 const reporterFn = function (results, data, opts = {}) {
@@ -60,7 +66,7 @@ const reporterFn = function (results, data, opts = {}) {
 gulp.task('lint', function () {
     let alreadyRan = false,
         semisDone = false;
-    return gulp.src(['build/js/main/*.js', 'build/js/main/**/*.js','build/js/admin/*.js', 'build/js/admin/**/*.js'])
+    return gulp.src(['build/js/main/*.js', 'build/js/main/**/*.js', 'build/js/admin/*.js', 'build/js/admin/**/*.js'])
         .pipe(th2.obj((file, enc, cb) => {
             if (!alreadyRan) {
                 drawTitle('Front-End Linting');
@@ -94,6 +100,39 @@ gulp.task('lintBE', function () {
 });
 
 
+gulp.task('html', function () {
+    return gulp
+        .src(['build/views/*.html', 'build/views/**/*.html'])
+        .pipe(cabu.references())
+        .pipe(replace(devVue, function (m) {
+            if (process.env.NODE_ENV && process.env.NODE_ENV == 'production') {
+                return prodVue;
+            }
+            return m;
+        }))
+        .pipe(gulp.dest('./views'))
+})
+
+gulp.task('imgs', function () {
+    return gulp
+        .src(['build/img/*.*', 'build/img/**/*.*'])
+        .pipe(cabu.resources())
+        .pipe(gulp.dest('public/img'))
+})
+
+gulp.task('fonts', function () {
+    return gulp
+        .src(['build/fonts/*.*'])
+        .pipe(cabu.resources())
+        .pipe(gulp.dest('public/fonts'))
+})
+gulp.task('media', function () {
+    return gulp
+        .src(['build/media/*.*'])
+        .pipe(cabu.resources())
+        .pipe(gulp.dest('public/media'))
+})
+
 // Compile Our Sass
 gulp.task('sass', function () {
     let alreadyRan = false;
@@ -122,6 +161,7 @@ gulp.task('sass', function () {
             console.log('CSS reduced from', sassStart, 'to', sassEnd + '. Reduction of', sassRedPerc + '%.')
             return cb(null, file);
         }))
+        .pipe(cabu.resources())
         .pipe(gulp.dest('public/css'));
 });
 gulp.task('scriptsAdmin', function () {
@@ -167,6 +207,7 @@ gulp.task('scriptsAdmin', function () {
         }))
         .pipe(concat('admin.js'))
         .pipe(rename('admin.min.js'))
+        .pipe(cabu.resources())
         .pipe(gulp.dest('public/js'));
 });
 // Concatenate & Minify JS
@@ -214,34 +255,40 @@ gulp.task('scriptsMain', function () {
         .pipe(addSrc.prepend(['build/js/libs/*.js', 'build/js/libs/**/*.js']))
         .pipe(concat('main.js'))
         .pipe(rename('main.min.js'))
+        .pipe(cabu.resources())
         .pipe(gulp.dest('public/js'));
 });
 
+// gulp.task('cleanMe', function () {
+//     let alreadyRan = false;
+//     if (!alreadyRan) {
+//         drawTitle('Removing Temp Files');
+//         alreadyRan = true;
+//     }
+//     return del([
+//         'public/js/adminCust.js', 'public/js/mainCust.js'
+//     ]);
+// });
+
 gulp.task('cleanMe', function () {
-    let alreadyRan = false;
-        if (!alreadyRan) {
-            drawTitle('Removing Temp Files');
-            alreadyRan = true;
-        }
-    return del([
-      'public/js/adminCust.js','public/js/mainCust.js'
-    ]);
-  });
+    return gulp.src(['public', 'views'], { read: false, allowEmpty: true })
+        .pipe(cleanF());
+});
 
 // Watch Files For Changes
 gulp.task('watch', function () {
     let alreadyRan = false;
     drawTitle('Watching Front-End scripts, Back-End Scripts, and CSS', true)
-    gulp.watch(['build/js/**/*.js', 'build/js/*.js'], gulp.series('lint', 'scriptsMain','scriptsAdmin','cleanMe'));
+    gulp.watch(['build/js/**/*.js', 'build/js/*.js'], gulp.series('lint', 'scriptsMain', 'scriptsAdmin', 'cleanMe'));
     gulp.watch(['routes/*.js', 'routes/**/*.js', 'models/*.js', 'models/**/*.js'], gulp.series('lintBE'))
     gulp.watch(['build/scss/*.scss', 'build/scss/**/*.scss'], gulp.series('sass'));
 });
 
 //task to simply create everything without actually watching or starting the DB
-gulp.task('render', gulp.series('lint', 'lintBE', 'sass', 'scriptsMain','scriptsAdmin','cleanMe'))
+gulp.task('render', gulp.series('cleanMe','lint', 'lintBE', 'sass', 'scriptsMain', 'scriptsAdmin', 'html', 'imgs', 'fonts', 'media'))
 
 // Default Task
-gulp.task('default', gulp.series('lint', 'lintBE', 'sass', 'scriptsMain','scriptsAdmin','cleanMe','watch'));
+gulp.task('default', gulp.series('cleanMe','lint', 'lintBE', 'sass', 'scriptsMain', 'scriptsAdmin', 'html', 'imgs', 'fonts', 'media', 'watch'));
 
 let currColInd = 0;
 
