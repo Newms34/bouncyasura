@@ -6,19 +6,30 @@
     <link rel="stylesheet" href="./css/styles.css">
 </head>
 
-<body cz-shortcut-listen="true">
+<body id="stat-bg" cz-shortcut-listen="true">
 
     <!-- <video autoplay="" muted="" loop="" id="myVideo">
         <source src="https://taimi.jumpsfor.science/taimi_jump_noaudio.mp4" type="video/mp4">
         Your browser does not support HTML5 video.
     </video> -->
 
-    <div class="content">
-        <h1>Taimi</h1>
-        <p>Taimi has jumped <span id="jumpTotal"></span> on a maximum of <span id="compTotal"></span>!</p>
-        <button id="back-btn">Go back</button>
-
-        <canvas id="bounce-history" style='max-width:800px;max-height:500px;' width='500' height='300'></canvas>
+    <div >
+        <button id="back-btn"><img src="../img/back.png" class='icon-img'> Go back</button>
+        <div id="stats-container">
+            <div class="stat-block">
+                <h1>Taimi Jump Record</h1>
+                <p>Taimi has jumped <span id="jumpTotal"></span> on a maximum of concurrent total of <span id="compTotal"></span>!</p>
+                
+                <canvas id="bounce-history" style='max-width:800px;max-height:500px;' width='500' height='300'></canvas>
+            </div>
+            <div class="stat-block">
+                <h1>Taimi Effect Stats</h1>
+                <p>Taimi has recently been affected by the following conditions/boons:</p>
+                <div id="effect-list">
+                    
+                </div>
+            </div>
+        </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.js"></script>
     <script src="./js/admin.min.js"></script>

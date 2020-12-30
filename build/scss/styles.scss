@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
 * {
   box-sizing: border-box;
 }
@@ -34,7 +35,7 @@ body {
     width: 100%;
     height: 100%;
     background: hsla(0, 0%, 0%, 0);
-  }  
+  }
 }
 
 .taimi-vid {
@@ -67,9 +68,9 @@ body {
   font-size: 18px;
   padding: 10px;
   width: 200px;
-  &:hover{
-      background: #ddd;
-      color: #000;
+  &:hover {
+    background: #ddd;
+    color: #000;
   }
 }
 
@@ -123,7 +124,7 @@ body {
   align-items: center;
   display: flex;
   height: 44px;
-  &:hover{
+  &:hover {
     background: url(../img/activeBG.png);
     background-position-y: center;
     background-repeat: no-repeat;
@@ -142,13 +143,12 @@ body {
   position: absolute;
   width: 235px;
   z-index: 99;
-  &:hover{
-      background: url(../img/talkHover.png);
-      background-position: center;
-      background-repeat: no-repeat;
+  &:hover {
+    background: url(../img/talkHover.png);
+    background-position: center;
+    background-repeat: no-repeat;
   }
 }
-
 
 #rando-fx-btn {
   background: url(../img/talk.png);
@@ -162,22 +162,22 @@ body {
   width: 235px;
   z-index: 99;
   filter: hue-rotate(-55deg);
-  &:hover{
-      background: url(../img/talkHover.png);
-      background-position: center;
-      background-repeat: no-repeat;
-      filter: hue-rotate(-55deg);
+  &:hover {
+    background: url(../img/talkHover.png);
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: hue-rotate(-55deg);
   }
 }
-#snow{
-  display:block;
-  position:fixed;
-  left:0;
-  top:0;
-  right:0;
-  top:0;
-  width:100%;
-  height:100%;
+#snow {
+  display: block;
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
   pointer-events: none;
 }
 #stats {
@@ -215,8 +215,8 @@ body {
     padding: 5px 0 0 35px;
     text-decoration: none;
     width: 185px;
-    &:hover{
-        background-blend-mode: initial;
+    &:hover {
+      background-blend-mode: initial;
     }
   }
 }
@@ -279,53 +279,98 @@ body {
   opacity: 0;
   transition: visibility 0.3s 0.5s linear, opacity 0.3s 0s linear;
 }
-#back-btn {
-  width: 200px;
-  font-size: 18px;
-  padding: 10px;
-  border: none;
-  background: #000;
-  color: #fff;
-  cursor: pointer;
-  &:hover {
-    background: #ddd;
-    color: black;
-  }
-}
 
 #myVideo {
-    position: fixed;
-    right: 0;
-    bottom: 0;
-    min-width: 100%;
-    min-height: 100%;
-    filter: sepia(1);
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  min-width: 100%;
+  min-height: 100%;
+  filter: sepia(1);
 }
 
-#chest{
-  position:fixed;
-  right:2px;
+#chest {
+  position: fixed;
+  right: 2px;
   transform-origin: 50% 50%;
-  bottom:2px;
-  animation:none;
-  &:hover{
+  bottom: 2px;
+  animation: none;
+  &:hover {
     animation: wiggle 1s ease infinite;
   }
 }
-@keyframes wiggle{
+@keyframes wiggle {
   0% {
-    transform:rotateZ(0deg);
+    transform: rotateZ(0deg);
   }
   25% {
-    transform:rotateZ(-10deg);
+    transform: rotateZ(-10deg);
   }
   50% {
-    transform:rotateZ(0deg);
+    transform: rotateZ(0deg);
   }
   75% {
-    transform:rotateZ(10deg);
+    transform: rotateZ(10deg);
   }
   80% {
-    transform:rotateZ(0deg);
+    transform: rotateZ(0deg);
   }
+}
+
+// stats stuff
+
+#stat-bg {
+  #back-btn {
+    width: 200px;
+    font-size: 18px;
+    padding: 10px;
+    background: rgb(224, 158, 255);
+    color: #222;
+    cursor: pointer;
+    border-radius: 5px;
+    transition-duration: 0.3s;
+    &:hover {
+      background: rgb(145, 101, 165);
+      color: black;
+    }
+  }
+  background: url("../img/ratasum.jpg");
+  background-size: cover;
+  height: 100vh;
+  width: 100vw;
+  & #stats-container {
+    background:rgba(20,20,20,.8);
+    display:flex;
+    & .stat-block{
+      padding: 2%;
+      display: inline-block;
+      width:49%;
+      flex:none;
+      & #bounce-history {
+        background: rgba(0,0,0,.6);
+        // the chart
+        border: 1px solid #0b0;
+        box-shadow: 0 0 5px #0b0;
+      }
+      & #effect-list{
+        border: 1px solid #0b0;
+        box-shadow: 0 0 5px #0b0;
+        & img{
+          // filter:grayscale(1) contrast(1.5) brightness(1.1);
+          filter:sepia(100%) hue-rotate(90deg) saturate(400%);
+        }
+        color:#0b0;
+        font-family: Share Tech Mono; 
+        text-transform:uppercase;
+        background: rgba(0,0,0,.6);
+      }
+    }
+  }
+}
+.icon-img {
+  width: 20px;
+  margin: 0 !important;
+}
+.is-fullwidth{
+  width:100%!important;
 }

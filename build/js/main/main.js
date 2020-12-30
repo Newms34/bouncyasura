@@ -3,7 +3,7 @@ const copyObj = o => JSON.parse(JSON.stringify(o)),
 
 const vu = new Vue({
     data: {
-        chestMouse:false,
+        chestMouse: false,
         taimiVids: q('.taimi-vid'),
         // dialogClose: q('#dialogClose'),
         socket: io(),
@@ -289,19 +289,8 @@ const vu = new Vue({
         //our "init". sorta behaves like a constructor
         const self = this;
         this.socket.on('connect', () => {
-            self.socket.emit('recordUser', {
-                name: self.socket.id
-            }, (data) => {
-                if (data == 'yes') {
-                    self.dialogBox.show = false;
-                    self.chainVids(['fear_o', 'idle_o'], self.askStart, true);
-                } else {
-                    self.doAlert({
-                        title: "Hey Commander! You've broken the app!",
-                        recon: true
-                    });
-                }
-            });
+            self.dialogBox.show = false;
+            self.chainVids(['fear_o', 'idle_o'], self.askStart, true);
         });
 
         this.socket.on('disconnect', (reason) => {
@@ -337,8 +326,8 @@ const vu = new Vue({
         });
     },
     methods: {
-        toggleSound(){
-            this.sound.playing()?this.sound.pause():this.sound.play();
+        toggleSound() {
+            this.sound.playing() ? this.sound.pause() : this.sound.play();
         },
         doAlert(m) {
             const self = this;
@@ -359,7 +348,7 @@ const vu = new Vue({
         },
         askStart() {
             const self = this;
-            if(this.alreadyAsked) return false;
+            if (this.alreadyAsked) return false;
             this.dialogBox.show = true;
             self.dialogBox.title = 'Ready to jump for Science?';
             self.dialogBox.replies = [{
@@ -396,7 +385,7 @@ const vu = new Vue({
         getSecs: o => Math.floor(o / 1000) + 's',
         setProps(fx) {
             const self = this;
-            console.log('SETTING FX',fx)
+            console.log('SETTING FX', fx)
             self.copyStyle = copyObj(this.fxStatus);
             self.hasFury = false;
             self.hasBlind = false;
@@ -520,10 +509,14 @@ const vu = new Vue({
         },
         changeVid(n) {
             const vids = Array.from(document.querySelectorAll('.taimi-vid')),
-                self = this;
+                self = this,
+                oldVid = vids.find(q => q.id.slice(4) === self.currVid);
+            // console.log('switched vid from',self.currVid,'to',n)
+            oldVid.pause();
+            oldVid.currentTime = 0;
             self.currVid = n;
             const theVid = vids.find(q => {
-                return q.id.slice(4) == self.currVid;
+                return q.id.slice(4) === self.currVid;
             });
             theVid.currentTime = 0;
             theVid.play();
@@ -669,7 +662,7 @@ const vu = new Vue({
                 this[s + 'Dialog']();
             } else if (s instanceof Array) {
                 s.forEach(q => {
-
+                    //do each action in our list
                     if (q == 'dialogOff') {
                         self.dialogBox.show = false;
                     } else if (q == 'talkOn') {
@@ -713,12 +706,12 @@ const vu = new Vue({
             }
             self.localJumps += jraFinal;
             // q('.localJumpsText').innerText = self.localJumps;
-            console.log('Boing!', jraFinal, 'for', self.socket.id,'fx',self.activeFx);
+            console.log('Boing!', jraFinal, 'for', self.socket.id, 'fx', self.activeFx);
             //send it to the server
             self.socket.emit('jump', {
                 // name: self.socket.id,
                 num: jraFinal,
-                fx:self.activeFx
+                fx: self.activeFx
             }, (data) => {
                 self.globalJumps = data.globalJumps;
                 self.totalJumpers = data.jumpers;
