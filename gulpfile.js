@@ -279,9 +279,9 @@ gulp.task('cleanMe', function () {
 gulp.task('watch', function () {
     let alreadyRan = false;
     drawTitle('Watching Front-End scripts, Back-End Scripts, and CSS', true)
-    gulp.watch(['build/js/**/*.js', 'build/js/*.js'], gulp.series('lint', 'scriptsMain', 'scriptsAdmin', 'cleanMe'));
+    gulp.watch(['build/scss/*.scss', 'build/scss/**/*.scss','build/js/**/*.js', 'build/js/*.js','build/views/*.html', 'build/views/**/*.html','build/img/*.*', 'build/img/**/*.*','build/fonts/*.*','build/media/*.*'], gulp.series('cleanMe', 'lint', 'scriptsMain', 'scriptsAdmin', 'sass','html', 'imgs', 'fonts', 'media'));
     gulp.watch(['routes/*.js', 'routes/**/*.js', 'models/*.js', 'models/**/*.js'], gulp.series('lintBE'))
-    gulp.watch(['build/scss/*.scss', 'build/scss/**/*.scss'], gulp.series('sass'));
+    // gulp.watch([], gulp.series('sass'));
 });
 
 //task to simply create everything without actually watching or starting the DB

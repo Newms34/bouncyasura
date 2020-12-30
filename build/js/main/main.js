@@ -370,10 +370,6 @@ const vu = new Vue({
                 msg: 'Actually, I wanna visit the [TINY] website!',
                 icon: 'wave',
                 do: ['dialogOff', 'talkOn', 'goDialog']
-            }, {
-                msg: `No, I'd rather just sit here and be boring.`,
-                icon: 'exit',
-                do: ['dialogOff']
             }];
             this.alreadyAsked = true;
             // self.dialogBox.show=true;
