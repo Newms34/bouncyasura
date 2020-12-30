@@ -756,9 +756,7 @@ const vu = new Vue({
     }
 }).$mount('#main');
 
-
-
 Mousetrap.bind('s n o w', function(){
     console.log('attempting to snu!')
     letitsnow();
-})
+});

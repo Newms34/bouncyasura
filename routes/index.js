@@ -113,7 +113,7 @@ router.get('/', (req, res, next) => {
 router.get('/stats', (req, res, next) => {
     res.sendFile(path.join(__dirname, '../views', 'stats.html'));
 });
-router.get('/stats', (req, res, next) => {
+router.get('/records', (req, res, next) => {
     // const statsRec = JSON.parse(fs.readFileSync('./bounceRecord.json', 'utf-8'));
     const fxRec = JSON.parse(fs.readFileSync('./bounceStats.json', 'utf-8'));
     res.send(fxRec);

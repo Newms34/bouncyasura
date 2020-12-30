@@ -2,7 +2,7 @@ const jumps = document.querySelector('#jumpTotal'),
     comps = document.querySelector('#compTotal'),
     effectList = document.querySelector('#effect-list');
 const getStats = () => {
-    fetch('/stats', {
+    fetch('/records', {
         cache: 'no-store'
     }).then(q => {
         return q.json();
