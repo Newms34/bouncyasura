@@ -285,12 +285,14 @@ const vu = new Vue({
         },
         randoBtn: false,
         quickMode: true,
+        askingRecon:false,
     },
     created: function () {
         //our "init". sorta behaves like a constructor
         const self = this;
 
         this.socket.on('connect', () => {
+            if(self.askingRecon) return false;
             self.dialogBox.show = false;
             if (self.quickMode) {
                 console.log('QUICK MODE!')
@@ -303,6 +305,10 @@ const vu = new Vue({
             }
         });
         this.socket.on('disconnect', (reason) => {
+            self.askingRecon = true;
+            self.talkOn = false;
+            self.randoBtn = false;
+            self.changeVid('fear_o')
             if (reason === 'io server disconnect') {
                 self.doAlert({
                     title: "Hey Commander! The Bouncing Server has disconnected!",
@@ -687,7 +693,7 @@ const vu = new Vue({
                     } else if (q == 'goDialog') {
                         self.goDialog();
                     } else if (q == 'reconnect') {
-                        self.socket.connect();
+                        window.location.reload();
                     }
                 });
             }
