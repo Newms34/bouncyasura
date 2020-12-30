@@ -289,7 +289,7 @@ const vu = new Vue({
         //our "init". sorta behaves like a constructor
         const self = this;
         this.socket.on('connect', () => {
-            self.socket.emit('iCanHasJumps', {
+            self.socket.emit('recordUser', {
                 name: self.socket.id
             }, (data) => {
                 if (data == 'yes') {
@@ -323,6 +323,9 @@ const vu = new Vue({
         Mousetrap.bind('f', function () {
             self.taimiSpeak();
         });
+        Mousetrap.bind('m', function () {
+            self.toggleSound();
+        });
         Mousetrap.bind('0', function () {
             self.doRandomCondis();
         });
@@ -334,7 +337,10 @@ const vu = new Vue({
         });
     },
     methods: {
-        doAlert: function (m) {
+        toggleSound(){
+            this.sound.playing()?this.sound.pause():this.sound.play();
+        },
+        doAlert(m) {
             const self = this;
             self.dialogBox.show = true;
             self.dialogBox.title = m.title;
@@ -351,8 +357,9 @@ const vu = new Vue({
                 });
             }
         },
-        askStart: function () {
+        askStart() {
             const self = this;
+            if(this.alreadyAsked) return false;
             this.dialogBox.show = true;
             self.dialogBox.title = 'Ready to jump for Science?';
             self.dialogBox.replies = [{
@@ -368,9 +375,10 @@ const vu = new Vue({
                 icon: 'exit',
                 do: ['dialogOff']
             }];
+            this.alreadyAsked = true;
             // self.dialogBox.show=true;
         },
-        chainVids: function (arr, theFn, loopLast = false) {
+        chainVids(arr, theFn, loopLast = false) {
             //chain a bunch of videos together. This calls each vid in sequence
             const vid = this.changeVid(arr.shift()),
                 self = this;
@@ -390,8 +398,9 @@ const vu = new Vue({
             };
         },
         getSecs: o => Math.floor(o / 1000) + 's',
-        setProps: function (fx) {
+        setProps(fx) {
             const self = this;
+            console.log('SETTING FX',fx)
             self.copyStyle = copyObj(this.fxStatus);
             self.hasFury = false;
             self.hasBlind = false;
@@ -446,7 +455,7 @@ const vu = new Vue({
             }
             self.applyProps(self.copyStyle);
         },
-        applyProps: function (t, noFx) {
+        applyProps(t, noFx) {
             const filtOut = `blur(${t.video.cssFilter.blur}px) brightness(${t.video.cssFilter.brightness}) hue-rotate(${t.video.cssFilter.hueRotate}deg) contrast(${t.video.cssFilter.contrast})`,
                 self = this,
                 vids = Array.from(document.querySelectorAll('.taimi-vid'));
@@ -493,31 +502,27 @@ const vu = new Vue({
                 this.changeVid('jump_o');
             }
             Array.from(document.querySelectorAll('.taimi-vid')).forEach(q => q.playbackRate = t.video.playbackRate);
-            // console.log('EFFECTS, MAYBE',self.activeFx,t.video)
-            // this.changeVid('fear')
-            // self.drawFx(self.activeFx);
-            // self.effectDeets = 
             setTimeout(function () {
                 self.setProps(self.activeFx.join(' '));
                 // setProps(null);
             }, 100);
         },
-        showBorders: function (col) {
+        showBorders(col) {
             q('.effects').classList.remove("hide");
             window.setTimeout(() => {
                 q('.effects').classList.add("hide");
             }, 1500);
         },
-        beCold: function () {
+        beCold() {
             self.bg.style.background = 'rgba(0, 128, 255, 0.1)';
         },
-        startJumping: function () {
+        startJumping() {
             const theVid = this.changeVid('jump_o');
             theVid.onplaying = () => {
                 this.doJump();
             };
         },
-        changeVid: function (n) {
+        changeVid(n) {
             const vids = Array.from(document.querySelectorAll('.taimi-vid')),
                 self = this;
             self.currVid = n;
@@ -528,10 +533,10 @@ const vu = new Vue({
             theVid.play();
             return theVid;
         },
-        randomVid: function () {
+        randomVid() {
             this.changeVid(this.vids[Math.floor(Math.random() * this.vids.length)]);
         },
-        taimiSpeak: function () {
+        taimiSpeak() {
             const self = this;
             this.talkOn = false;
             this.isTiny = false;
@@ -562,20 +567,20 @@ const vu = new Vue({
                 self.showDialog(true);
             });
         },
-        closeDialog: function () {
+        closeDialog() {
             this.dialogOn = false;
             this.talkOn = true;
         },
-        changeDialog: function () {
+        changeDialog() {
             this.isTiny = !this.isTiny;
             this.currTinyCount = 0;
             this.currDiagCont = 0;
             this.showDialog();
         },
-        goDialog: function () {
+        goDialog() {
             window.location.href = 'https://tinyarmy.org/';
         },
-        continueDialog: function () {
+        continueDialog() {
             // dialogOn = false;
             if (!this.isTiny) {
                 //regular, auto-gen'd dialog
@@ -589,10 +594,10 @@ const vu = new Vue({
             }
             this.showDialog();
         },
-        showDebug: function () {
-            q('.debug').classList.remove("hide");
+        showDebug() {
+            q('.debug').classList.toggle("hide");
         },
-        showDialog: function (isProblem) {
+        showDialog(isProblem) {
             //function just displays a particular dialog.
             const self = this,
                 counter = this.isTiny ? this.currTinyCount : this.currDiagCont;
@@ -662,7 +667,7 @@ const vu = new Vue({
             // q('#dialogReply').innerHTML = replies;
             this.dialogOn = true;
         },
-        doAction: function (s, t) {
+        doAction(s, t) {
             const self = this;
             if (typeof s == 'string') {
                 this[s + 'Dialog']();
@@ -685,7 +690,7 @@ const vu = new Vue({
                 });
             }
         },
-        doJump: function () {
+        doJump() {
             //count it locally
             let jraFinal = this.jumpRateAdjust;
             const self = this;
@@ -712,17 +717,18 @@ const vu = new Vue({
             }
             self.localJumps += jraFinal;
             // q('.localJumpsText').innerText = self.localJumps;
-            console.log('Boing!', jraFinal, 'for', self.socket.id);
+            console.log('Boing!', jraFinal, 'for', self.socket.id,'fx',self.activeFx);
             //send it to the server
             self.socket.emit('jump', {
-                name: self.socket.id,
-                num: jraFinal
+                // name: self.socket.id,
+                num: jraFinal,
+                fx:self.activeFx
             }, (data) => {
                 self.globalJumps = data.globalJumps;
                 self.totalJumpers = data.jumpers;
             });
         },
-        fader: function (sel) {
+        fader(sel) {
             const fadeTarget = q(sel);
             let fadeEffect = setInterval(function () {
                 if (!fadeTarget.style.opacity) {
@@ -735,7 +741,7 @@ const vu = new Vue({
                 }
             }, 50);
         },
-        doRandomCondis: function (disableRando) {
+        doRandomCondis(disableRando) {
             const self = this;
             if (disableRando) {
                 self.randoBtn = false;
