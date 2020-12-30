@@ -110,8 +110,8 @@ class Markov {
 router.get('/', (req, res, next) => {
     res.sendFile(path.join(__dirname, '../views', 'index.html'));
 });
-router.get('/admin', (req, res, next) => {
-    res.sendFile(path.join(__dirname, '../views', 'admin.html'));
+router.get('/stats', (req, res, next) => {
+    res.sendFile(path.join(__dirname, '../views', 'stats.html'));
 });
 router.get('/stats', (req, res, next) => {
     // const statsRec = JSON.parse(fs.readFileSync('./bounceRecord.json', 'utf-8'));

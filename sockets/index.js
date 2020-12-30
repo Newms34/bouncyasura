@@ -45,9 +45,10 @@ const fs = require('fs'),
             })
 
             socket.on('disconnect', function () {
-                //console.log('Got disconnect!');
-
+                console.log('Got disconnect!');
+                console.log('id might have been',socket.id)
                 let i = currSockets.indexOf(socket);
+                currSockets = currSockets.filter(q=>q.id!=socket.id)
                 currSockets.splice(i, 1);
             });
         });

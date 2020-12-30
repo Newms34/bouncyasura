@@ -66,7 +66,7 @@ const reporterFn = function (results, data, opts = {}) {
 gulp.task('lint', function () {
     let alreadyRan = false,
         semisDone = false;
-    return gulp.src(['build/js/main/*.js', 'build/js/main/**/*.js', 'build/js/admin/*.js', 'build/js/admin/**/*.js'])
+    return gulp.src(['build/js/main/*.js', 'build/js/main/**/*.js', 'build/js/stats/*.js', 'build/js/stats/**/*.js'])
         .pipe(th2.obj((file, enc, cb) => {
             if (!alreadyRan) {
                 drawTitle('Front-End Linting');
@@ -164,9 +164,9 @@ gulp.task('sass', function () {
         .pipe(cabu.resources())
         .pipe(gulp.dest('public/css'));
 });
-gulp.task('scriptsAdmin', function () {
+gulp.task('scriptsStats', function () {
     let alreadyRan = false;
-    return gulp.src(['build/js/admin/*.js', 'build/js/admin/**/*.js'])
+    return gulp.src(['build/js/stats/*.js', 'build/js/stats/**/*.js'])
         .pipe(th2.obj((file, enc, cb) => {
             if (!alreadyRan) {
                 drawTitle('Front-End Script Concatenation, Minification, and Uglification');
@@ -175,7 +175,7 @@ gulp.task('scriptsAdmin', function () {
             // jsStart = file._contents.toString('utf8').length;
             return cb(null, file);
         }))
-        .pipe(concat('adminCust.js'))
+        .pipe(concat('statsCust.js'))
         .pipe(th2.obj((file, enc, cb) => {
             // console.log('FILE IS',file._contents.toString('utf8'),'ENC',enc,'CB',cb);
             jsStart = file._contents.toString('utf8').length;
@@ -202,11 +202,11 @@ gulp.task('scriptsAdmin', function () {
             // console.log('FILE IS',file._contents.toString('utf8'),'ENC',enc,'CB',cb);
             let jsEnd = file._contents.toString('utf8').length,
                 jsRedPerc = Math.floor(10000 * (jsStart - jsEnd) / jsStart) / 100;
-            console.log('Admin JS reduced from', jsStart, 'to', jsEnd + '. Reduction of', jsRedPerc + '%.')
+            console.log('Stats JS reduced from', jsStart, 'to', jsEnd + '. Reduction of', jsRedPerc + '%.')
             return cb(null, file);
         }))
-        .pipe(concat('admin.js'))
-        .pipe(rename('admin.min.js'))
+        .pipe(concat('stats.js'))
+        .pipe(rename('stats.min.js'))
         .pipe(cabu.resources())
         .pipe(gulp.dest('public/js'));
 });
@@ -259,17 +259,6 @@ gulp.task('scriptsMain', function () {
         .pipe(gulp.dest('public/js'));
 });
 
-// gulp.task('cleanMe', function () {
-//     let alreadyRan = false;
-//     if (!alreadyRan) {
-//         drawTitle('Removing Temp Files');
-//         alreadyRan = true;
-//     }
-//     return del([
-//         'public/js/adminCust.js', 'public/js/mainCust.js'
-//     ]);
-// });
-
 gulp.task('cleanMe', function () {
     return gulp.src(['public', 'views'], { read: false, allowEmpty: true })
         .pipe(cleanF());
@@ -279,16 +268,16 @@ gulp.task('cleanMe', function () {
 gulp.task('watch', function () {
     let alreadyRan = false;
     drawTitle('Watching Front-End scripts, Back-End Scripts, and CSS', true)
-    gulp.watch(['build/scss/*.scss', 'build/scss/**/*.scss','build/js/**/*.js', 'build/js/*.js','build/views/*.html', 'build/views/**/*.html','build/img/*.*', 'build/img/**/*.*','build/fonts/*.*','build/media/*.*'], gulp.series('cleanMe', 'lint', 'scriptsMain', 'scriptsAdmin', 'sass','html', 'imgs', 'fonts', 'media'));
+    gulp.watch(['build/scss/*.scss', 'build/scss/**/*.scss','build/js/**/*.js', 'build/js/*.js','build/views/*.html', 'build/views/**/*.html','build/img/*.*', 'build/img/**/*.*','build/fonts/*.*','build/media/*.*'], gulp.series('cleanMe', 'lint', 'scriptsMain', 'scriptsStats', 'sass','html', 'imgs', 'fonts', 'media'));
     gulp.watch(['routes/*.js', 'routes/**/*.js', 'models/*.js', 'models/**/*.js'], gulp.series('lintBE'))
     // gulp.watch([], gulp.series('sass'));
 });
 
 //task to simply create everything without actually watching or starting the DB
-gulp.task('render', gulp.series('cleanMe','lint', 'lintBE', 'sass', 'scriptsMain', 'scriptsAdmin', 'html', 'imgs', 'fonts', 'media'))
+gulp.task('render', gulp.series('cleanMe','lint', 'lintBE', 'sass', 'scriptsMain', 'scriptsStats', 'html', 'imgs', 'fonts', 'media'))
 
 // Default Task
-gulp.task('default', gulp.series('cleanMe','lint', 'lintBE', 'sass', 'scriptsMain', 'scriptsAdmin', 'html', 'imgs', 'fonts', 'media', 'watch'));
+gulp.task('default', gulp.series('cleanMe','lint', 'lintBE', 'sass', 'scriptsMain', 'scriptsStats', 'html', 'imgs', 'fonts', 'media', 'watch'));
 
 let currColInd = 0;
 
