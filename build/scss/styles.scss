@@ -357,7 +357,7 @@ body {
         box-shadow: 0 0 5px #0b0;
         & img{
           // filter:grayscale(1) contrast(1.5) brightness(1.1);
-          filter:sepia(100%) hue-rotate(90deg) saturate(400%);
+          filter:sepia(100%) hue-rotate(90deg) saturate(400%);  
         }
         color:#0b0;
         font-family: Share Tech Mono; 

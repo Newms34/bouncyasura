@@ -283,16 +283,25 @@ const vu = new Vue({
             replies: [],
             show: false
         },
-        randoBtn: false
+        randoBtn: false,
+        quickMode: true,
     },
     created: function () {
         //our "init". sorta behaves like a constructor
         const self = this;
+
         this.socket.on('connect', () => {
             self.dialogBox.show = false;
-            self.chainVids(['fear_o', 'idle_o'], self.askStart, true);
-        });
+            if (self.quickMode) {
+                console.log('QUICK MODE!')
+                self.talkOn = true;
+                self.randoBtn = true;
+                self.changeVid('jump_o')
+            } else {
+                self.chainVids(['fear_o', 'idle_o'], self.askStart, true);
 
+            }
+        });
         this.socket.on('disconnect', (reason) => {
             if (reason === 'io server disconnect') {
                 self.doAlert({
@@ -508,16 +517,20 @@ const vu = new Vue({
             };
         },
         changeVid(n) {
-            const vids = Array.from(document.querySelectorAll('.taimi-vid')),
+            const vids = [...document.querySelectorAll('.taimi-vid')],
                 self = this,
                 oldVid = vids.find(q => q.id.slice(4) === self.currVid);
             // console.log('switched vid from',self.currVid,'to',n)
-            oldVid.pause();
-            oldVid.currentTime = 0;
+            if (!!oldVid) {
+
+                oldVid.pause();
+                oldVid.currentTime = 0;
+            }
             self.currVid = n;
             const theVid = vids.find(q => {
                 return q.id.slice(4) === self.currVid;
             });
+            console.log('switched to vid', theVid, 'vid ids', vids)
             theVid.currentTime = 0;
             theVid.play();
             return theVid;
