@@ -116,20 +116,20 @@ gulp.task('html', function () {
 gulp.task('imgs', function () {
     return gulp
         .src(['build/img/*.*', 'build/img/**/*.*'])
-        .pipe(cabu.resources())
+        // .pipe(cabu.resources())
         .pipe(gulp.dest('public/img'))
 })
 
 gulp.task('fonts', function () {
     return gulp
         .src(['build/fonts/*.*'])
-        .pipe(cabu.resources())
+        // .pipe(cabu.resources())
         .pipe(gulp.dest('public/fonts'))
 })
 gulp.task('media', function () {
     return gulp
         .src(['build/media/*.*'])
-        .pipe(cabu.resources())
+        // .pipe(cabu.resources())
         .pipe(gulp.dest('public/media'))
 })
 

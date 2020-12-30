@@ -32,7 +32,7 @@ Old Video
 //set port, or process.env if not local
 
 http.listen(process.env.PORT || 8080,function(o){
-    ci.drawImg('./public/img/smolTaimi.png',{colMode:'16'})
+    ci.drawImg('./build/img/smolTaimi.png',{colMode:'16'})
 });
 
 
