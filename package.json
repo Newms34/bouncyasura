@@ -23,18 +23,22 @@
     "gulp": "^4.0.2",
     "gulp-add-src": "^1.0.0",
     "gulp-babel": "^8.0.0",
+    "gulp-cachebust": "0.0.11",
+    "gulp-clean": "^0.4.0",
     "gulp-clean-css": "^4.3.0",
     "gulp-concat": "^2.6.1",
     "gulp-iife": "^0.4.0",
     "gulp-jshint": "^2.1.0",
     "gulp-rename": "^1.4.0",
+    "gulp-replace": "^1.0.0",
     "gulp-sass": "^4.0.2",
     "gulp-terser": "^1.2.0",
     "jshint": "^2.11.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon app.js --ignore bounceRecord.json"
+    "start": "nodemon app.js --ignore bounceRecord.json --ignore bounceStats.json",
+    "postinstall": "gulp render"
   },
   "keywords": [
     "jumping",

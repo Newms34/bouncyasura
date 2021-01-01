@@ -1,0 +1,13 @@
+RENAME to 'bounceStats' so we can grab data from old bounceRecord!
+
+bounceRecord stuff:
+ - start timestamp (when program was started)
+ - last update timestamp
+ - list of ips: for "total jumpers".
+    -  this is only added to, NEVER removed from
+ - rolling array of jumps per second, users per second, total with each condi/boon
+    - timestamp
+    - j/s
+    - total users online
+    - per condi counts
+ - total jumps, just a running total. Nothing fancy.

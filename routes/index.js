@@ -110,18 +110,18 @@ class Markov {
 router.get('/', (req, res, next) => {
     res.sendFile(path.join(__dirname, '../views', 'index.html'));
 });
-router.get('/admin', (req, res, next) => {
-    res.sendFile(path.join(__dirname, '../views', 'admin.html'));
-});
 router.get('/stats', (req, res, next) => {
-    const file = JSON.parse(fs.readFileSync('./bounceRecord.json', 'utf-8'));
-    res.send(file);
+    res.sendFile(path.join(__dirname, '../views', 'stats.html'));
+});
+router.get('/records', (req, res, next) => {
+    const fxRec = JSON.parse(fs.readFileSync('./bounceStats.json', 'utf-8'));
+    res.send(fxRec);
 });
 router.get('/getMarkov', (req, res, next) => {
     const opts = {
-            grp: req.query.grp && !isNaN(req.query.grp) ? req.query.grp : 2,
-            noCap: !!req.query.noCap
-        },
+        grp: req.query.grp && !isNaN(req.query.grp) ? req.query.grp : 2,
+        noCap: !!req.query.noCap
+    },
         // sents = req.query.sents && !isNaN(req.query.sents) ? req.query.sents : 3,
         mark = new Markov(taimi.join(' '), opts);
     const out = {
