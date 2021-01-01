@@ -331,6 +331,12 @@ const vu = new Vue({
         Mousetrap.bind('0', function () {
             self.doRandomCondis();
         });
+        Mousetrap.bind('g', function () {
+            window.location.href =`https://tinyarmy.org`;
+        });
+        Mousetrap.bind('h', function () {
+            self.goStats();
+        });
         Mousetrap.bind('esc', function () {
             self.closeDialog();
         });
@@ -341,6 +347,9 @@ const vu = new Vue({
     methods: {
         toggleSound() {
             this.sound.playing() ? this.sound.pause() : this.sound.play();
+        },
+        goStats(){
+            window.location.assign('./stats')
         },
         doAlert(m) {
             const self = this;

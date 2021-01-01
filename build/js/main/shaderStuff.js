@@ -641,9 +641,8 @@ const snowflake = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAAC
                     size.push(
                         5 * Math.random() * 5 * (h * dpi / 1000)
                     )
-                    // console.log('SNOWFLAKE',snowflake)
                 })
-                // console.log(snu)
+                console.log(color)
 
                 this.uniforms.worldSize = [width, height, depth]
 

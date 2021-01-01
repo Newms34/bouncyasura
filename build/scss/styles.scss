@@ -149,6 +149,10 @@ body {
     background-position: center;
     background-repeat: no-repeat;
   }
+  &#go-to-stats{
+    bottom:130px;
+    filter:hue-rotate(-40deg) saturate(1.5);
+  }
 }
 
 #rando-fx-btn {
@@ -213,8 +217,9 @@ body {
     font-size: 20pt;
     height: 45px;
     margin-top: 10px;
-    padding: 5px 0 0 35px;
+    padding: 0 15px;
     text-decoration: none;
+    line-height:45px;
     width: 185px;
     &:hover {
       background-blend-mode: initial;
@@ -323,18 +328,6 @@ body {
 
 #stat-bg {
   #back-btn {
-    // width: 200px;
-    // font-size: 18px;
-    // padding: 10px;
-    // background: rgb(224, 158, 255);
-    // color: #222;
-    // cursor: pointer;
-    // border-radius: 5px;
-    // transition-duration: 0.3s;
-    // &:hover {
-    //   background: rgb(145, 101, 165);
-    //   color: black;
-    // }
     position:static;
   }
   background: url("../img/ratasum.jpg");

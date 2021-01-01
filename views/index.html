@@ -26,7 +26,7 @@
         href="https://d1h9a8s8eodvjz.cloudfront.net/fonts/menomonia/08-02-12/menomonia-italic.css">
         <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.css"> -->
     <link rel="stylesheet" type="text/css" href="./fonts/jumpinTaimi.css">
-    <link rel="stylesheet" type="text/css" href="./css/styles.cd69f9a8.css">
+    <link rel="stylesheet" type="text/css" href="./css/styles.d4cb94db.css">
 </head>
 
 <body>
@@ -65,6 +65,9 @@
         <div class='interact-btn' v-on:click="taimiSpeak()" v-show='talkOn'>
             Talk [F]
         </div>
+        <div class='interact-btn' id="go-to-stats" v-show='talkOn' v-on:click='goStats()'>
+            Stats [H]
+        </div>
         <!-- <div id="rando-fx-btn">
             Roll the Dice! [0]
         </div> -->
@@ -78,11 +81,11 @@
         </div>
         <div id="stats">
             <div class="characterName">Tiny Taimi</div>
-            <div class="localJumps">Local Jumps: <span class="localJumpsText">{{localJumps}}</span></div>
-            <div class="globalJumps">Global Jumps: <span class="globalJumpsText">{{globalJumps}}</span></div>
-            <div class="currentJumpers">Total Jumpers: <span class="totalJumpersText">{{totalJumpers}}</span></div>
+            <div class="localJumps">Your jumps: <span class="localJumpsText">{{localJumps}}</span></div>
+            <div class="globalJumps">Everyone's jumps: <span class="globalJumpsText">{{globalJumps}}</span></div>
+            <div class="currentJumpers">Max jumpers at one time: <span class="totalJumpersText">{{totalJumpers}}</span></div>
             <div class="joinTINY">
-                <a href="https://tinyarmy.org" target="_blank">Join TINY</a>
+                <a href="https://tinyarmy.org" target="_blank">Join TINY [G]</a>
             </div>
         </div>
 
@@ -92,7 +95,8 @@
             <div class="bottom-border effect-border"></div>
             <div class="effect-border left-border"></div>
         </div>
-        <div id="chest" v-on:mouseover='chestMouse=true' v-on:mouseout='chestMouse=false'  v-on:click="doRandomCondis(true)" v-show='randoBtn'>
+        
+        <div id="chest" v-on:mouseover='chestMouse=true' v-on:mouseout='chestMouse=false'  v-on:click="doRandomCondis(true)" v-show='randoBtn' title='Roll the dice!'>
             <img src="./img/chestclosed.png" alt="Get some boons (maybe)!" v-show='!chestMouse'>
             <img src="./img/chestopen.png" alt="Get some boons (maybe)!" v-show='chestMouse'>
         </div>
@@ -104,7 +108,7 @@
     <script src="https://unpkg.com/vue/dist/vue.min.js"></script> -->
     <!-- <script src="./js/fx.js"></script> -->
     <!-- <script src="./js/main.js"></script> -->
-    <script src="./js/main.min.8c81b212.js"></script>
+    <script src="./js/main.min.3ef8ed42.js"></script>
 </body>
 
 </html>
