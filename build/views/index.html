@@ -85,7 +85,7 @@
             <div class="globalJumps">Everyone's jumps: <span class="globalJumpsText">{{globalJumps}}</span></div>
             <div class="currentJumpers">Max jumpers at one time: <span class="totalJumpersText">{{totalJumpers}}</span></div>
             <div class="joinTINY">
-                <a href="https://tinyarmy.org" target="_blank">Join TINY [G]</a>
+                <a href="https://tinyarmy.org/?utm_source=taimijumps&utm_medium=side&utm_campaign=join_tiny" onClick="gtag('event', 'Clicked Join', { event_category: 'Stats Area'});" target="_blank">Join TINY [G]</a>
             </div>
         </div>
 
@@ -109,6 +109,17 @@
     <!-- <script src="./js/fx.js"></script> -->
     <!-- <script src="./js/main.js"></script> -->
     <script src="./js/main.min.js"></script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-131583111-2"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() {
+            console.log('Sending gtag');
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+        gtag('config', 'UA-131583111-2');
+    </script>
 </body>
 
 </html>

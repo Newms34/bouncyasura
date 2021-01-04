@@ -332,7 +332,8 @@ const vu = new Vue({
             self.doRandomCondis();
         });
         Mousetrap.bind('g', function () {
-            window.location.href =`https://tinyarmy.org`;
+            gtag('event', 'Clicked Join', { event_category: 'Stats Area'});
+            window.open('https://tinyarmy.org/?utm_source=taimijumps&utm_medium=side&utm_campaign=join_tiny');
         });
         Mousetrap.bind('h', function () {
             self.goStats();
@@ -591,7 +592,8 @@ const vu = new Vue({
             this.showDialog();
         },
         goDialog() {
-            window.location.href = 'https://tinyarmy.org/';
+            gtag('event', 'Clicked Join', { event_category: 'Taimi'});
+            window.open('https://tinyarmy.org/?utm_source=taimijumps&utm_medium=side&utm_campaign=join_tiny');
         },
         continueDialog() {
             // dialogOn = false;
