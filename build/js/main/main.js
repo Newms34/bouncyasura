@@ -732,7 +732,8 @@ const vu = new Vue({
             }
             self.localJumps += jraFinal;
             // q('.localJumpsText').innerText = self.localJumps;
-            console.log('Boing!', jraFinal, 'for', self.socket.id, 'fx', self.activeFx);
+            //maybe wrap this in an enviroment check for debug state?
+            //console.log('Boing!', jraFinal, 'for', self.socket.id, 'fx', self.activeFx);
             //send it to the server
             self.socket.emit('jump', {
                 // name: self.socket.id,
