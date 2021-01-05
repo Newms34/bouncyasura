@@ -4,7 +4,7 @@
   "description": "Taimi Jumps",
   "main": "app.js",
   "dependencies": {
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "body-parser": "^1.19.0",
     "chalk": "^2.4.2",
     "chalk-image": "^1.0.3",
