@@ -9,7 +9,7 @@
     "chalk": "^2.4.2",
     "chalk-image": "^1.0.3",
     "del": "^5.1.0",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "path": "^0.12.7",
     "socket.io": "^2.3.0",
     "through2": "^3.0.1"
