@@ -1,0 +1,10 @@
+{
+    "prod": {
+        "discordHook": "https://discord.com/api/webhooks/....",
+        "discordUpdateDelta": 1000
+    },
+    "dev": {
+        "discordHook": "https://discord.com/api/webhooks/....",
+        "discordUpdateDelta": 50
+    }
+}
