@@ -55,7 +55,7 @@
         <div class="globalJumps">Global Jumps: <span class="globalJumpsText">0</span></div>
         <div class="currentJumpers">Total Jumpers: <span class="totalJumpersText">0</span></div>
         <div class="joinTINY">
-            <a href="https://tinyarmy.org" target="_blank">Join TINY</a>
+            <a href="https://tinyarmy.org/?utm_source=taimijumps&utm_medium=side&utm_campaign=join_tiny" onClick="gtag('event', 'Clicked Join', { event_category: 'Stats Area'});" target="_blank">Join TINY</a>
         </div>
     </div>
 
@@ -71,6 +71,23 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mousetrap/1.6.3/mousetrap.js"></script>
     <script src="./js/fx.js"></script>
     <script src="./js/main.js"></script>
+    <!-- Snow -->
+    <!-- <script src="./js/PureSnow.js"></script>
+    <div id="snow"></div> -->
+    <!-- /snow -->
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-131583111-2"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-131583111-2');
+    </script>
+
 </body>
 
 </html>
